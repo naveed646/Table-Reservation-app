@@ -1,0 +1,10 @@
+{
+  "data": {
+    "navbarLinks": [
+      { "id": 1, "title": "HOME", "link": "/" },
+      { "id": 2, "title": "ABOUT US", "link": "/about" },
+      { "id": 3, "title": "SERVICES", "link": "/services" },
+      { "id": 5, "title": "CONTACT US", "link": "/contact" }
+    ]
+  }
+}
