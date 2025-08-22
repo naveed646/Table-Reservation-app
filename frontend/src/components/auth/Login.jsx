@@ -1,8 +1,8 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import loginImg from "../../assets/loginImg.jpg";
-import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/auth";
 
 function Login() {
   const {
@@ -10,12 +10,41 @@ function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const navigate = useNavigate();
+  const [serverError, setServerError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = (data) => {
-    console.log("Login Form Data:", data);
-    navigate('/dashboard');
+  const onSubmit = async (data) => {
+    setLoading(true);
+    setServerError("");
+    try {
+      const res = await loginUser(data);
+
+      if (res.token) {
+        localStorage.setItem("token", res.token);
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            _id: res._id,
+            name: res.name,
+            email: res.email,
+            role: res.role,
+          })
+        );
+
+        // navigate on role base...
+        if (res.role === "admin") {
+          navigate("/adminDashboard");
+        } else {
+          navigate("/dashboard");
+        }
+      }
+    } catch (err) {
+      console.error("Login Error:", err);
+      setServerError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -32,13 +61,11 @@ function Login() {
             creative presentation, offering a curated menu of dishes crafted
             from fresh, locally sourced ingredients. Whether you're here for a
             casual meal or a special occasion, we serve every plate with
-            passion, style, and a pinch of perfection. Indulge in a dining
-            journey where every piece on your plate is a piece of art.
+            passion, style, and a pinch of perfection.
           </p>
         </div>
       </div>
 
-    
       <div className="bg-gradient-to-tr from-zinc-900 to-orange-900 text-white p-6 mr-10 ml-10 rounded-xl shadow-lg w-full max-w-sm">
         <h1 className="text-3xl font-semibold text-center mb-6">Login</h1>
 
@@ -84,12 +111,17 @@ function Login() {
               </span>
             )}
           </div>
-          
+
+          {serverError && (
+            <p className="text-red-400 text-center text-sm">{serverError}</p>
+          )}
+
           <button
             type="submit"
-            className="bg-orange-500 cursor-pointer text-white font-semibold mx-20 py-4 rounded-full hover:bg-orange-800 transition"
+            disabled={loading}
+            className="bg-orange-500 cursor-pointer text-white font-semibold mx-20 py-4 rounded-full hover:bg-orange-800 transition disabled:opacity-50"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
           <p className="text-sm text-center mt-2">
             Don't have an account?{" "}

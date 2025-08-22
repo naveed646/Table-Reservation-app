@@ -5,8 +5,6 @@ import { NavLink } from "react-router-dom";
 export default function UserDashboard({ username = "Guest" }) {
   
 
- 
-
   useEffect(() => {
     document.title = `Welcome ${username} | Restaurant Booking`;
   }, [username]);

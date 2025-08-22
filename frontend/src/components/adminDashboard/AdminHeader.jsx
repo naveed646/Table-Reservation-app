@@ -27,8 +27,7 @@ export default function AdminHeader({ toggleSidebar }) {
       <button onClick={toggleSidebar} className="md:hidden text-2xl text-black">
         <FaBars />
       </button>
-
-      {/* Title */}
+      
       <h1 className="text-lg md:text-xl font-bold text-black">
         Welcome, Guest
       </h1>

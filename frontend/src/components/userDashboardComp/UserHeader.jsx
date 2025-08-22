@@ -23,6 +23,12 @@ function HeaderAndProfile({ toggleSidebar }) {
     };
   }, [showProfile]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
   return (
     <>
       {/* Header */}
@@ -49,7 +55,7 @@ function HeaderAndProfile({ toggleSidebar }) {
             <FaUserCircle /> Profile
           </button>
           <button
-            onClick={() => navigate("/")}
+            onClick={handleLogout}
             className="flex items-center gap-1 px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-base cursor-pointer bg-zinc-800 text-white hover:bg-zinc-700 rounded-xl "
           >
             <FaSignOutAlt /> Logout
@@ -58,9 +64,7 @@ function HeaderAndProfile({ toggleSidebar }) {
       </header>
 
       {/* Profile dropdown */}
-      {showProfile && (
-       <UserProfile profileRef={profileRef} />
-      )}
+      {showProfile && <UserProfile profileRef={profileRef} />}
     </>
   );
 }

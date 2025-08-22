@@ -18,6 +18,12 @@ function AdminProfile({ menuRef }) {
     }
   };
 
+    const handleLogout = () => {
+    localStorage.removeItem("token"); 
+      localStorage.removeItem("user");
+    navigate("/"); 
+  };
+
   return (
     <div
       ref={menuRef}
@@ -64,7 +70,7 @@ function AdminProfile({ menuRef }) {
 
       {/* Logout Button */}
       <button
-        onClick={() => navigate("/logout")}
+        onClick={handleLogout}
         className="mt-3 px-4 py-2 bg-black text-white rounded-lg text-sm hover:bg-red-700 transition flex items-center gap-2"
       >
         <FaSignOutAlt /> Logout

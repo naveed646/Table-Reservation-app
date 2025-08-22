@@ -1,23 +1,29 @@
 import React from "react";
-import {NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import registerImg from "../../assets/registerImg.jpg";
-import { useNavigate } from "react-router-dom";
-
-
+import { registerUser } from "../../api/auth"; // 👈 import API
 
 function Signup() {
-  const navigate= useNavigate()
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    navigate('/register');
-    
+  const onSubmit = async (data) => {
+    try {
+      console.log("Form Data:", data);
+      const response = await registerUser(data);
+      alert(" Registration successful!");
+      console.log("API Response:", response);
+
+      navigate("/login"); 
+    } catch (error) {
+      console.error("Error:", error);
+      alert(` Registration failed: ${error.message || "Try again"}`);
+    }
   };
 
   return (
@@ -27,25 +33,19 @@ function Signup() {
         style={{ backgroundImage: `url(${registerImg})` }}
       >
         <div className="text-black text-center max-w-xl bg-gradient-to-tr from-zinc-800 to-green-200 opacity-90 p-6 rounded">
-          <h1 className="font-bold text-3xl mb-4">קเєςє ๏ภ קlคtє</h1>
+          <h1 className="font-bold text-3xl mb-4">คเєςє ๏ภ קlคtє</h1>
           <p className="font-semibold">
-            At Piece on Plate, we believe food is more than just nourishment —
-            it's an experience. Our restaurant blends comforting flavors with
-            creative presentation, offering a curated menu of dishes crafted
-            from fresh, locally sourced ingredients. Whether you're here for a
-            casual meal or a special occasion, we serve every plate with
-            passion, style, and a pinch of perfection. Indulge in a dining
-            journey where every piece on your plate is a piece of art.
+            At Piece on Plate, we believe food is more than just nourishment — it's an experience. 
+            Our restaurant blends comforting flavors with creative presentation, 
+            offering a curated menu of dishes crafted from fresh, locally sourced ingredients.
           </p>
         </div>
       </div>
 
-      
       <div className="bg-gradient-to-tr from-zinc-900 to-cyan-600 text-white p-6 mr-10 ml-10 rounded-xl shadow-lg w-full max-w-sm">
         <h1 className="text-3xl font-semibold text-center mb-6">Sign Up</h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          
           <div className="flex flex-col">
             <label className="text-base font-medium">Name</label>
             <input
@@ -55,13 +55,10 @@ function Signup() {
               {...register("name", { required: "Name is required" })}
             />
             {errors.name && (
-              <span className="text-red-400 text-sm">
-                {errors.name.message}
-              </span>
+              <span className="text-red-400 text-sm">{errors.name.message}</span>
             )}
           </div>
 
-        
           <div className="flex flex-col">
             <label className="text-base font-medium">Email</label>
             <input
@@ -70,16 +67,11 @@ function Signup() {
               className="text-lg px-3 py-2 border-b border-gray-400 focus:outline-none text-black"
               {...register("email", {
                 required: "Email is required",
-                pattern: {
-                  value: /^\S+@\S+$/i,
-                  message: "Enter a valid email",
-                },
+                pattern: { value: /^\S+@\S+$/i, message: "Enter a valid email" },
               })}
             />
             {errors.email && (
-              <span className="text-red-400 text-sm">
-                {errors.email.message}
-              </span>
+              <span className="text-red-400 text-sm">{errors.email.message}</span>
             )}
           </div>
 
@@ -91,16 +83,11 @@ function Signup() {
               className="text-lg px-3 py-2 border-b border-gray-400 focus:outline-none text-black"
               {...register("password", {
                 required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
+                minLength: { value: 6, message: "Password must be at least 6 characters" },
               })}
             />
             {errors.password && (
-              <span className="text-red-400 text-sm">
-                {errors.password.message}
-              </span>
+              <span className="text-red-400 text-sm">{errors.password.message}</span>
             )}
           </div>
 
