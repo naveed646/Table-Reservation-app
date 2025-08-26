@@ -1,8 +1,10 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const path = require("path");
 const Connect_DB = require("./conifg/db"); 
 const authRoutes = require("./routes/authRoutes");
+const menuRoutes =require("./routes/menuRoutes")
 
 dotenv.config();
 
@@ -16,9 +18,11 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/auth", authRoutes);
+app.use("/api/menu", menuRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

@@ -1,9 +1,11 @@
 import React, {useEffect } from "react";
 import { FaUtensils, FaCalendarAlt, FaChair } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-export default function UserDashboard({ username = "Guest" }) {
-  
+export default function UserDashboard() {
+  const user= useSelector((state)=> state.auth.user);
+  const username=user?.name || "Guest"
 
   useEffect(() => {
     document.title = `Welcome ${username} | Restaurant Booking`;

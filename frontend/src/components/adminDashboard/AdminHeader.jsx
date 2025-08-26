@@ -2,10 +2,13 @@ import { FaUserShield, FaSignOutAlt, FaCog, FaBars } from "react-icons/fa";
 import { useRef, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import AdminProfile from "./AdminProfile";
+import { useSelector } from "react-redux";
 
 export default function AdminHeader({ toggleSidebar }) {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef();
+  const user =useSelector((state)=> state.auth.user)
+  const username=user?.name || "Guest"
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -29,7 +32,7 @@ export default function AdminHeader({ toggleSidebar }) {
       </button>
       
       <h1 className="text-lg md:text-xl font-bold text-black">
-        Welcome, Guest
+        Welcome, {username}
       </h1>
 
       {/* Admin Profile */}

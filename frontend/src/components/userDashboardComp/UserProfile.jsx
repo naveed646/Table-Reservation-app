@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { FaUserCircle, FaCamera } from "react-icons/fa";
 import { user as initialUser } from "../../data/index";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function UserProfile({ profileRef }) {
   const [user, setUser] = useState(initialUser);
   const [previewImage, setPreviewImage] = useState(user.profilePicture || null);
   const navigate = useNavigate();
+  const myUser=useSelector((state)=> state.auth.user)
 
   // Handle profile image upload
   const handleImageUpload = (e) => {
@@ -48,11 +50,11 @@ function UserProfile({ profileRef }) {
       </div>
 
       {/* User Info */}
-      <h2 className="text-lg font-semibold mt-2">{user.name}</h2>
-      <p className="text-gray-500 text-sm">{user.email}</p>
-      <div className="bg-orange-100 text-orange-700 mt-3 px-4 py-2 rounded-full text-sm">
+      <h2 className="text-lg font-semibold mt-2">{myUser.name}</h2>
+      <p className="text-gray-500 text-sm">{myUser.email}</p>
+      {/* <div className="bg-orange-100 text-orange-700 mt-3 px-4 py-2 rounded-full text-sm">
         Loyalty Points: <strong>{user.loyaltyPoints}</strong>
-      </div>
+      </div> */}
 
       {/* Settings Button */}
       <button

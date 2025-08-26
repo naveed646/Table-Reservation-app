@@ -57,12 +57,25 @@ export const admin = {
   role: "Administrator",
   profilePicture: "", // leave empty to show default icon
 };
+// ============================
+// admin dashbaorad links
+// ============================
+import { FaTachometerAlt, FaClipboardList, FaUtensils } from "react-icons/fa";
+import { BiFoodMenu } from "react-icons/bi";
+import { GiMeal } from "react-icons/gi";
+export const adminlinks = [
+    { to: "/adminDashboard", label: "Dashboard", icon: FaTachometerAlt,  },
+    { to: "/adminreservation", label: "Reservations", icon: FaClipboardList  },
+    { to: "/admintable", label: "Tables", icon: FaUtensils },
+    { to: "/adminmenu", label: "Menu Management", icon: BiFoodMenu },
+    { to: "/menulist", label: "Menu Items", icon: GiMeal },
+  ];
 
 
 // ============================
 // User Dashboard Nav Links
 // ============================
-import { FaUtensils, FaCalendarAlt, FaGift } from "react-icons/fa";
+import { FaCalendarAlt, FaGift } from "react-icons/fa";
 import { RxDashboard } from "react-icons/rx";
 
 export const dashNavLinks = [

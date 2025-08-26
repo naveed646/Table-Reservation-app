@@ -56,7 +56,7 @@ function Sidebar({ open, setOpen }) {
             ${isActive ? "bg-black text-white" : "hover:bg-zinc-200"}`
           }
         >
-          <link.icon className="text-2xl" /> {/* render the component */}
+          <link.icon className="text-2xl" /> 
           {!collapsed && link.label}
         </NavLink>
       ))}

@@ -23,6 +23,9 @@ import AdminSettings from "./components/adminDashboard/AdminSettings";
 import { NotPageFound } from "./pages/NotPageFound";
 import UserSettings from "./components/userDashboardComp/UserSettings";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminMenu from "./components/adminDashboard/AdminMenu";
+import MenuList from "./components/adminDashboard/adminMenuCode/MenuList";
+import MenuItems from "./components/homepagecomp/MenuItems";
 
 function App() {
   const router = createBrowserRouter([
@@ -58,6 +61,10 @@ function App() {
         {
           path: "/contact",
           element: <ConatctUs />,
+        },
+        {
+          path: "/menuitmes",
+          element: <MenuItems />,
         },
         {
           path: "*",
@@ -164,6 +171,22 @@ function App() {
           element: (
             <ProtectedRoute role="admin">
               <AdminSettings />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "adminmenu",
+          element: (
+            <ProtectedRoute role="admin">
+              <AdminMenu/>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/menulist",
+          element: (
+            <ProtectedRoute role="admin">
+              <MenuList/>
             </ProtectedRoute>
           ),
         },

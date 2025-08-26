@@ -1,12 +1,8 @@
-import { FaTachometerAlt, FaClipboardList, FaUtensils } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import { adminlinks } from "../../data";
 
 export default function AdminSidebar({ isOpen, closeSidebar }) {
-  const links = [
-    { to: "/adminDashboard", label: "Dashboard", icon: <FaTachometerAlt /> },
-    { to: "/adminreservation", label: "Reservations", icon: <FaClipboardList /> },
-    { to: "/admintable", label: "Tables", icon: <FaUtensils /> },
-  ];
+
 
   return (
     <>
@@ -17,7 +13,7 @@ export default function AdminSidebar({ isOpen, closeSidebar }) {
       >
         <h2 className="text-xl font-bold mb-8">Manage Reservations</h2>
         <nav className="flex flex-col gap-4">
-          {links.map((link, idx) => (
+          {adminlinks.map((link, idx) => (
             <NavLink
               key={idx}
               to={link.to}
@@ -28,8 +24,8 @@ export default function AdminSidebar({ isOpen, closeSidebar }) {
                 }`
               }
             >
-              {link.icon}
-              {link.label}
+              <link.icon/>
+              <span>{link.label}</span>
             </NavLink>
           ))}
         </nav>

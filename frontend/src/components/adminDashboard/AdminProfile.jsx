@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { FaUserCircle, FaCamera, FaSignOutAlt } from "react-icons/fa";
-import { admin as initialAdmin } from "../../data/index"; 
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../features/auth/authSlice"; // ✅ import logout action
 
 function AdminProfile({ menuRef }) {
-  const [admin, setAdmin] = useState(initialAdmin);
-  const [previewImage, setPreviewImage] = useState(admin.profilePicture || null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Redux user
+  const user = useSelector((state) => state.auth.user);
+
+  // Profile image state (start with user.profilePicture if available)
+  const [previewImage, setPreviewImage] = useState(user?.profilePicture || null);
 
   // Handle profile image upload
   const handleImageUpload = (e) => {
@@ -14,14 +20,19 @@ function AdminProfile({ menuRef }) {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setPreviewImage(imageUrl);
-      setAdmin({ ...admin, profilePicture: imageUrl });
+
+      // ❗ if you want to persist uploaded profile image in Redux/backend,
+      // you can dispatch an update here
+      // dispatch(updateUser({ ...user, profilePicture: imageUrl }));
     }
   };
 
-    const handleLogout = () => {
-    localStorage.removeItem("token"); 
-      localStorage.removeItem("user");
-    navigate("/"); 
+  // Logout handler
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    dispatch(logout()); 
+    navigate("/");
   };
 
   return (
@@ -54,10 +65,10 @@ function AdminProfile({ menuRef }) {
       </div>
 
       {/* Admin Info */}
-      <h2 className="text-lg font-semibold mt-2">{admin.name}</h2>
-      <p className="text-gray-500 text-sm">{admin.email}</p>
+      <h2 className="text-lg font-semibold mt-2">{user?.name || "Unknown"}</h2>
+      <p className="text-gray-500 text-sm">{user?.email || "No email"}</p>
       <div className="bg-orange-100 text-orange-700 mt-3 px-4 py-2 rounded-full text-sm">
-        Role: <strong>{admin.role || "Administrator"}</strong>
+        Role: <strong>{user?.role || "Administrator"}</strong>
       </div>
 
       {/* Settings Button */}

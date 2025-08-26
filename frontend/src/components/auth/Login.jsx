@@ -3,6 +3,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import loginImg from "../../assets/loginImg.jpg";
 import { loginUser } from "../../api/auth";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../features/auth/authSlice";
 
 function Login() {
   const {
@@ -11,6 +13,7 @@ function Login() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -25,6 +28,15 @@ function Login() {
         localStorage.setItem(
           "user",
           JSON.stringify({
+            _id: res._id,
+            name: res.name,
+            email: res.email,
+            role: res.role,
+          })
+        );
+
+        dispatch(
+          setUser({
             _id: res._id,
             name: res.name,
             email: res.email,
