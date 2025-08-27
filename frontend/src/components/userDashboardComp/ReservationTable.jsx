@@ -1,53 +1,191 @@
-import React from "react";
-import { user } from "../../data/index";
-import { FaHistory } from "react-icons/fa";
-
+import React, { useEffect, useState } from "react";
+import {
+  getMyReservations,
+  cancelReservation,
+  updateReservation,
+} from "../../api/reservation";
+import { FaEdit, FaTrash } from "react-icons/fa";
 function ReservationTable() {
-  return (
-    <div
-      className="bg-gray-50 text-black 
-                    w-[90%] md:w-4/5  p-4 sm:p-6 mt-6 sm:mt-10 
-                    rounded-xl shadow-md mx-auto overflow-x-auto"
-    >
-      <h2 className="text-base sm:text-lg font-bold flex items-center gap-2 mb-4 text-black">
-        <FaHistory /> Upcoming Reservation
-      </h2>
+  const [reservations, setReservations] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filter, setFilter] = useState("all");
+  const [editing, setEditing] = useState({ id: null, field: null, value: "" });
 
-      <div className="">
-        <table className="w-full border-collapse min-w-[600px]">
-          <thead>
-            <tr className="bg-zinc-800 text-white text-left text-sm sm:text-base">
-              <th className="p-2">Table</th>
-              <th className="p-2">Date</th>
-              <th className="p-2">Time</th>
-              <th className="p-2">Day</th>
-              <th className="p-2">Duration</th>
-              <th className="p-2 text-center">Guests</th>
-              <th className="p-2 text-center">Actions</th>
+  const itemsPerPage = 5;
+
+  useEffect(() => {
+    loadReservations();
+  }, []);
+
+  const loadReservations = async () => {
+    const data = await getMyReservations();
+    setReservations(data);
+  };
+
+  // handle inline edit save
+  const handleSave = async () => {
+    if (editing.value !== "") {
+      await updateReservation(editing.id, { [editing.field]: editing.value });
+      loadReservations();
+    }
+    setEditing({ id: null, field: null, value: "" });
+  };
+
+  const handleCancel = async (id) => {
+    await cancelReservation(id);
+    loadReservations();
+  };
+
+  // filter reservations
+  const filteredReservations =
+    filter === "all"
+      ? reservations
+      : reservations.filter((res) => res.status === filter);
+
+  // pagination
+  const totalPages = Math.ceil(filteredReservations.length / itemsPerPage);
+  const paginatedReservations = filteredReservations.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  return (
+    <div className="mt-10 w-[90%] mx-auto">
+      <h2 className="text-xl text-center font-bold mb-4">My Reservations</h2>
+
+      {/* Filter */}
+      <div className="flex justify-end mb-4">
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="border rounded px-3 py-1"
+        >
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      {/* Table */}
+      <table className="w-full border shadow rounded-lg overflow-hidden">
+        <thead>
+          <tr className="bg-gray-200 h-10">
+            <th className="p-2">Date</th>
+            <th className="p-2">Time</th>
+            <th className="p-2">Guests</th>
+            <th className="p-2">Duration</th>
+            <th className="p-2">Status</th>
+            <th className="p-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {paginatedReservations.map((res) => (
+            <tr key={res._id} className="border-b hover:bg-gray-50">
+              <td className="text-center py-3">{res.date}</td>
+              <td className="text-center">{res.time}</td>
+
+              {/* Guests */}
+              <td className="text-center">
+                {editing.id === res._id && editing.field === "guests" ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <input
+                      type="number"
+                      min="1"
+                      max="10"
+                      value={editing.value}
+                      onChange={(e) =>
+                        setEditing({ ...editing, value: e.target.value })
+                      }
+                      className="w-16 border rounded px-1"
+                    />
+                    <button
+                      onClick={handleSave}
+                      className="px-2 py-1 bg-green-500 text-white rounded"
+                    >
+                      Save
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-2">
+                    {res.guests}
+                    <FaEdit
+                      className="text-blue-500 cursor-pointer"
+                      onClick={() =>
+                        setEditing({ id: res._id, field: "guests", value: res.guests })
+                      }
+                    />
+                  </div>
+                )}
+              </td>
+
+              {/* Duration */}
+              <td className="text-center">
+                {editing.id === res._id && editing.field === "duration" ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <input
+                      type="number"
+                      min="1"
+                      max="150"
+                      value={editing.value}
+                      onChange={(e) =>
+                        setEditing({ ...editing, value: e.target.value })
+                      }
+                      className="w-20 border rounded px-1"
+                    />
+                    <button
+                      onClick={handleSave}
+                      className="px-2 py-1 bg-green-500 text-white rounded"
+                    >
+                      Save
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-2">
+                    {res.duration}
+                    <FaEdit
+                      className="text-blue-500 cursor-pointer"
+                      onClick={() =>
+                        setEditing({ id: res._id, field: "duration", value: res.duration })
+                      }
+                    />
+                  </div>
+                )}
+              </td>
+
+              <td className="text-center">{res.status}</td>
+              <td className="text-center">
+                {res.status === "pending" && (
+                  <FaTrash
+                    onClick={() => handleCancel(res._id)}
+                    className="text-red-500 cursor-pointer"
+                  />
+                )}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {user.recentTable.map((order) => (
-              <tr key={order.id} className="border-b text-sm sm:text-base">
-                <td className="p-2">{order.table}</td>
-                <td className="p-2">{order.date}</td>
-                <td className="p-2">{order.time}</td>
-                <td className="p-2">{order.day}</td>
-                <td className="p-2">{order.duration}</td>
-                <td className="p-2 text-center">{order.people}</td>
-                <td className="p-2 text-center">
-                  <button
-                    className="bg-zinc-800
-                                     hover:bg-zinc-700 
-                                     text-white px-3 py-1 rounded text-xs sm:text-sm"
-                  >
-                    Cancel
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Pagination */}
+      <div className="flex justify-center items-center mt-4 gap-2">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((p) => p - 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((p) => p + 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

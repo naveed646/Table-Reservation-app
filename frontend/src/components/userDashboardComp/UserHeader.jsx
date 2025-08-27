@@ -2,11 +2,15 @@ import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import UserProfile from "./UserProfile";
+import { useDispatch } from "react-redux";
+import { logout } from "../../features/auth/authSlice";
 
 function HeaderAndProfile({ toggleSidebar }) {
   const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
   const profileRef = useRef(null);
+
+  const dsipatch = useDispatch();
 
   // Close profile menu when clicking outside
   useEffect(() => {
@@ -24,8 +28,7 @@ function HeaderAndProfile({ toggleSidebar }) {
   }, [showProfile]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    dsipatch(logout());
     navigate("/");
   };
 

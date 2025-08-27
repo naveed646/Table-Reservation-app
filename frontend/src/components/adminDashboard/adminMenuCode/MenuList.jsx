@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getMenu, deleteMenu } from "../../../api/menu";
 import EditMenuItem from "./EditMenuItem";
+import { FaTrash, FaEdit } from "react-icons/fa";
 
 function MenuList() {
   const [menu, setMenu] = useState([]);
@@ -69,12 +70,12 @@ function MenuList() {
               <p className="text-green-600 font-semibold">${item.price}</p>
             </div>
           </div>
-          <div className="flex gap-3">
-            <button onClick={() => setEditingItem(item)} className="text-blue-500 hover:underline">
-              ✏️ Edit
+          <div className="mr-10 flex gap-3">
+            <button onClick={() => setEditingItem(item)} className="text-blue-500 text-xl hover:underline">
+              <FaEdit/>
             </button>
-            <button onClick={() => handleDelete(item._id)} className="text-red-500 hover:underline">
-              ❌ Delete
+            <button onClick={() => handleDelete(item._id)} className="text-red-500 text-xl hover:underline">
+             <FaTrash/>
             </button>
           </div>
         </div>

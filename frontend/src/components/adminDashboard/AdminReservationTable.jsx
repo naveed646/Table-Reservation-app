@@ -1,60 +1,65 @@
-import { useState, useMemo } from "react";
-import { adminReservations as initialReservations } from "../../data/index";
+import { useState, useMemo, useEffect } from "react";
 import { FaListAlt } from "react-icons/fa";
-import ReservationActions from './ReservationActions'
+import ReservationActions from "./ReservationActions";
+import { getAllReservations } from "../../api/reservation";
 
 export default function AdminReservationTable() {
-  const [reservations, setReservations] = useState(initialReservations);
+  const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
-  const [sortConfig, setSortConfig] = useState({ key: "id", direction: "asc" });
+  const [sortConfig, setSortConfig] = useState({
+    key: "date",
+    direction: "asc",
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const token = localStorage.getItem("token");
 
-  // Approve reservationh
-  const handleApprove = (id) => {
-    setReservations((prev) =>
-      prev.map((res) => (res.id === id ? { ...res, status: "Confirmed" } : res))
-    );
-  };
-
-  // Cancel reservation
-  const handleCancel = (id) => {
-    setReservations((prev) =>
-      prev.map((res) => (res.id === id ? { ...res, status: "Cancelled" } : res))
-    );
-  };
-
-  // Handle sorting
-  const handleSort = (key) => {
-    setSortConfig((prev) => {
-      if (prev.key === key) {
-        return { key, direction: prev.direction === "asc" ? "desc" : "asc" };
+  // ✅ Fetch reservations from backend
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        setLoading(true);
+        const data = await getAllReservations(token);
+        setReservations(data);
+      } catch (err) {
+        console.error("Error fetching reservations:", err);
+      } finally {
+        setLoading(false);
       }
-      return { key, direction: "asc" };
-    });
+    };
+    fetchReservations();
+  }, [token]);
+
+  // ✅ Sorting
+  const handleSort = (key) => {
+    setSortConfig((prev) =>
+      prev.key === key
+        ? { key, direction: prev.direction === "asc" ? "desc" : "asc" }
+        : { key, direction: "asc" }
+    );
   };
 
-  // Filtering + searching + sorting
+  // ✅ Filtering + searching + sorting
   const filteredReservations = useMemo(() => {
     let data = [...reservations];
 
-    // Filter by search
     if (searchTerm) {
       data = data.filter(
         (res) =>
-          res.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          res.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          res.id.toString().includes(searchTerm)
+          res.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          res._id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          res.user?.email?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Filter by status
     if (filterStatus !== "All") {
-      data = data.filter((res) => res.status === filterStatus);
+      data = data.filter(
+        (res) => res.status.toLowerCase() === filterStatus.toLowerCase()
+      );
     }
 
-    // Sort
     if (sortConfig) {
       data.sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -70,15 +75,18 @@ export default function AdminReservationTable() {
     return data;
   }, [reservations, searchTerm, filterStatus, sortConfig]);
 
-  // Pagination
+  // ✅ Pagination
   const totalPages = Math.ceil(filteredReservations.length / itemsPerPage);
   const paginatedReservations = filteredReservations.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
+  if (loading)
+    return <p className="text-center p-4">Loading reservations...</p>;
+
   return (
-    <div className="bg-white w-full p-4 rounded-xl shadow-md mx-auto">
+    <div className="bg-white w-full p-4 rounded-xl shadow-md ">
       <h2 className="text-lg font-bold flex items-center gap-2 text-gray-700 mb-4">
         <FaListAlt className="text-gray-700 text-xl" /> Reservations List
       </h2>
@@ -99,9 +107,9 @@ export default function AdminReservationTable() {
           className="border p-2 rounded w-full md:w-1/5"
         >
           <option value="All">All</option>
-          <option value="Pending">Pending</option>
-          <option value="Confirmed">Confirmed</option>
-          <option value="Cancelled">Cancelled</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="cancelled">Cancelled</option>
         </select>
       </div>
 
@@ -111,18 +119,18 @@ export default function AdminReservationTable() {
           <thead className="bg-gray-200 text-gray-700">
             <tr>
               {[
-                "id",
-                "customer",
+                "name",
                 "email",
-                "table",
+                "tableId",
                 "date",
-                "guest",
+                "time",
+                "guests",
                 "duration",
                 "status",
               ].map((key) => (
                 <th
                   key={key}
-                  className="px-2  cursor-pointer hover:bg-gray-300"
+                  className="px-2 cursor-pointer hover:bg-gray-300"
                   onClick={() => handleSort(key)}
                 >
                   {key.toUpperCase()}{" "}
@@ -135,20 +143,20 @@ export default function AdminReservationTable() {
           </thead>
           <tbody>
             {paginatedReservations.map((res) => (
-              <tr key={res.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{res.id}</td>
-                <td className="px-4 py-2">{res.customer}</td>
-                <td className="px-4 py-2">{res.email}</td>
-                <td className="px-4 py-2">{res.table}</td>
+              <tr key={res._id} className="border-b hover:bg-gray-50">
+                <td className="px-4 py-2 text-center">{res.name}</td>
+                <td className="px-4 py-2">{res.user?.email}</td>
+                <td className="px-4 py-2">{res.tableId}</td>
                 <td className="px-4 py-2">{res.date}</td>
-                <td className="px-4 py-2">{res.guest}</td>
+                <td className="px-4 py-2">{res.time}</td>
+                <td className="px-4 py-2">{res.guests}</td>
                 <td className="px-4 py-2">{res.duration}</td>
                 <td className="px-4 py-2">
                   <span
                     className={`px-2 py-1 rounded text-sm font-medium ${
-                      res.status === "Confirmed"
+                      res.status === "confirmed"
                         ? "bg-green-100 text-green-700"
-                        : res.status === "Pending"
+                        : res.status === "pending"
                         ? "bg-yellow-100 text-yellow-700"
                         : "bg-red-100 text-red-700"
                     }`}
@@ -157,14 +165,16 @@ export default function AdminReservationTable() {
                   </span>
                 </td>
                 <td className="px-4 py-2 space-x-2">
-                  {res.status === "Pending" ? (
-                    <>
-                      <ReservationActions
-                        resId={res.id}
-                        handleApprove={handleApprove}
-                        handleCancel={handleCancel}
-                      />
-                    </>
+                  {res.status === "pending" ? (
+                    <ReservationActions
+                      resId={res._id}
+                      status={res.status} // pass current status
+                      onStatusChange={(updated) =>
+                        setReservations((prev) =>
+                          prev.map((r) => (r._id === updated._id ? updated : r))
+                        )
+                      }
+                    />
                   ) : (
                     <span className="text-gray-400 text-sm italic">
                       No actions

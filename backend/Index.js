@@ -5,6 +5,7 @@ const path = require("path");
 const Connect_DB = require("./conifg/db"); 
 const authRoutes = require("./routes/authRoutes");
 const menuRoutes =require("./routes/menuRoutes")
+const reservationRoutes = require("./routes/reservationRoutes");
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/menu", menuRoutes);
+app.use("/api/reservations", reservationRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

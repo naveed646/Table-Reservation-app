@@ -12,7 +12,7 @@ try {
 }
 
 const initialState = {
-  user: savedUser, // will store { _id, name, email, role }
+  user: savedUser, // will store user id, name etc..
 };
 
 const authSlice = createSlice({

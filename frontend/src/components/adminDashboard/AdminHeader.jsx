@@ -31,7 +31,7 @@ export default function AdminHeader({ toggleSidebar }) {
         <FaBars />
       </button>
       
-      <h1 className="text-lg md:text-xl font-bold text-black">
+      <h1 className="text-lg md:text-xl font-bold  text-red-500">
         Welcome, {username}
       </h1>
 
