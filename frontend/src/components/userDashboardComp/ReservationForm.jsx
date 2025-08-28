@@ -168,7 +168,7 @@ export default function ReservationForm({ table, onClose, onSuccess }) {
                 className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-900"
                 {...register("guests", { required: true, min: 1 })}
               >
-                {Array.from({ length: 4 }).map((_, i) => (
+                {Array.from({ length: 8 }).map((_, i) => (
                   <option key={i + 1} value={i + 1}>
                     {i + 1}
                   </option>

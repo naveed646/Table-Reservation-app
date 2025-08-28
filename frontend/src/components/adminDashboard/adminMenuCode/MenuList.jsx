@@ -71,10 +71,10 @@ function MenuList() {
             </div>
           </div>
           <div className="mr-10 flex gap-3">
-            <button onClick={() => setEditingItem(item)} className="text-blue-500 text-xl hover:underline">
+            <button onClick={() => setEditingItem(item)} className="text-blue-500 cursor-pointer text-xl hover:underline">
               <FaEdit/>
             </button>
-            <button onClick={() => handleDelete(item._id)} className="text-red-500 text-xl hover:underline">
+            <button onClick={() => handleDelete(item._id)} className="text-red-500 cursor-pointer text-xl hover:underline">
              <FaTrash/>
             </button>
           </div>
@@ -90,13 +90,13 @@ function MenuList() {
         >
           ⬅ Prev
         </button>
-        <span className="px-3 py-1">
+        <span className="px-3 cursor-pointer py-1">
           Page {page} of {totalPages}
         </span>
         <button
           onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
           disabled={page === totalPages}
-          className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50"
+          className="px-3 py-1 bg-gray-300 cursor-pointer rounded disabled:opacity-50"
         >
           Next ➡
         </button>

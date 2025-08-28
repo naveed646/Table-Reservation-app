@@ -107,7 +107,7 @@ function AddMenuItem({ onAdd }) {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg shadow-md transition transform hover:-translate-y-0.5 hover:shadow-lg"
+          className="w-full bg-black hover:bg-zinc-600 cursor-pointer text-white font-semibold py-2 rounded-lg shadow-md transition transform hover:-translate-y-0.5 hover:shadow-lg"
         >
           Add Item
         </button>

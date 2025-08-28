@@ -12,15 +12,14 @@ function ReservationTable() {
   const [editing, setEditing] = useState({ id: null, field: null, value: "" });
 
   const itemsPerPage = 5;
-
-  useEffect(() => {
-    loadReservations();
-  }, []);
-
   const loadReservations = async () => {
     const data = await getMyReservations();
     setReservations(data);
   };
+
+  useEffect(() => {
+    loadReservations();
+  }, []);
 
   // handle inline edit save
   const handleSave = async () => {
@@ -62,7 +61,7 @@ function ReservationTable() {
         >
           <option value="all">All</option>
           <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
+          <option value="approved">Approved</option>
           <option value="cancelled">Cancelled</option>
         </select>
       </div>
@@ -112,7 +111,11 @@ function ReservationTable() {
                     <FaEdit
                       className="text-blue-500 cursor-pointer"
                       onClick={() =>
-                        setEditing({ id: res._id, field: "guests", value: res.guests })
+                        setEditing({
+                          id: res._id,
+                          field: "guests",
+                          value: res.guests,
+                        })
                       }
                     />
                   </div>
@@ -146,7 +149,11 @@ function ReservationTable() {
                     <FaEdit
                       className="text-blue-500 cursor-pointer"
                       onClick={() =>
-                        setEditing({ id: res._id, field: "duration", value: res.duration })
+                        setEditing({
+                          id: res._id,
+                          field: "duration",
+                          value: res.duration,
+                        })
                       }
                     />
                   </div>

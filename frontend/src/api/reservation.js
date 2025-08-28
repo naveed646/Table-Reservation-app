@@ -43,3 +43,10 @@ export const updateReservationStatus = async (id, status) => {
   const res = await API.put(`/${id}/status`, { status });
   return res.data;
 };
+
+export const freeUpReservation = async (id) => {
+  const res = await API.put(`/${id}/freeup`);
+  return res.data;
+};
+
+

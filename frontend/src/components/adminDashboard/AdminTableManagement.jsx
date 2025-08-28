@@ -1,12 +1,13 @@
 import { useState, useMemo, useEffect } from "react";
 import { FaListAlt } from "react-icons/fa";
-import { getAllReservations } from "../../api/reservation";
-import { useDispatch } from "react-redux";
-import { changeReservationStatus } from "../../features/reservations/reservationSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import {
+  fetchAllReservations,
+  changeReservationStatus,
+} from "../../features/reservations/reservationSlice";
 
 export default function AdminReservationTable() {
-  const [reservations, setReservations] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
   const [sortConfig, setSortConfig] = useState({
@@ -15,34 +16,26 @@ export default function AdminReservationTable() {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-  const token = localStorage.getItem("token");
 
   const dispatch = useDispatch();
+  const { all: reservations, loading, error } = useSelector(
+    (state) => state.reservations
+  );
 
-  // Fetch reservations from backend
+  // ✅ Fetch reservations from Redux
   useEffect(() => {
-    const fetchReservations = async () => {
-      try {
-        setLoading(true);
-        const data = await getAllReservations(token);
-        setReservations(data);
-      } catch (err) {
-        console.error("Error fetching reservations:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchReservations();
-  }, [token]);
+    dispatch(fetchAllReservations());
+  }, [dispatch]);
 
-  // Free Up action
+  // ✅ Free Up action (mark as completed)
   const handleFreeUp = async (id) => {
     try {
-      await dispatch(changeReservationStatus({ id, status: "available" }));
-      setReservations((prev) =>
-        prev.map((r) => (r._id === id ? { ...r, status: "available" } : r))
-      );
+      await dispatch(
+        changeReservationStatus({ id, status: "completed" })
+      ).unwrap();
+      toast.success("Reservation marked as completed (table freed)");
     } catch (err) {
+      toast.error(err.message || "Failed to free up");
       console.error("Error freeing table:", err);
     }
   };
@@ -97,8 +90,8 @@ export default function AdminReservationTable() {
     currentPage * itemsPerPage
   );
 
-  if (loading)
-    return <p className="text-center p-4">Loading reservations...</p>;
+  if (loading) return <p className="text-center p-4">Loading reservations...</p>;
+  if (error) return <p className="text-center p-4 text-red-500">{error}</p>;
 
   return (
     <div className="bg-white w-full p-4 rounded-xl shadow-md ">
@@ -125,7 +118,7 @@ export default function AdminReservationTable() {
           <option value="pending">Pending</option>
           <option value="approved">Approved</option>
           <option value="cancelled">Cancelled</option>
-          <option value="available">Available</option>
+          <option value="completed">Completed</option>
         </select>
       </div>
 
@@ -174,7 +167,7 @@ export default function AdminReservationTable() {
                         ? "bg-green-100 text-green-700"
                         : res.status === "pending"
                         ? "bg-yellow-100 text-yellow-700"
-                        : res.status === "available"
+                        : res.status === "completed"
                         ? "bg-gray-100 text-gray-700"
                         : "bg-red-100 text-red-700"
                     }`}
@@ -183,12 +176,14 @@ export default function AdminReservationTable() {
                   </span>
                 </td>
                 <td className="px-4 py-2 space-x-2">
-                  <button
-                    onClick={() => handleFreeUp(res._id)}
-                    className="bg-blue-500 text-white px-2 py-1 rounded"
-                  >
-                    Free Up
-                  </button>
+                  {res.status === "approved" && (
+                    <button
+                      onClick={() => handleFreeUp(res._id)}
+                      className="bg-black cursor-pointer hover:bg-zinc-600 text-white px-2 py-1 w-18 rounded"
+                    >
+                      Free Up
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

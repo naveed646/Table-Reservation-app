@@ -6,6 +6,7 @@ const {
   updateReservation,
   cancelReservation,
   updateReservationStatus,
+  freeUpReservation,
 } = require("../controller/reservationController.js");
 const { protect, admin } = require("../middlewares/authMiddleware.js");
 
@@ -20,5 +21,8 @@ router.delete("/:id", protect, cancelReservation);
 // Admin routes
 router.get("/", protect, admin, getAllReservations);
 router.put("/:id/status", protect, admin, updateReservationStatus);
+router.put("/:id/freeup", protect, admin, freeUpReservation);
+
+
 
 module.exports = router; 

@@ -102,6 +102,27 @@ const updateReservationStatus = async (req, res) => {
   }
 };
 
+// ✅ Free up a reservation (Admin)
+const freeUpReservation = async (req, res) => {
+  try {
+    const reservation = await Reservation.findById(req.params.id);
+
+    if (!reservation) return res.status(404).json({ message: "Not found" });
+
+    if (reservation.status !== "approved") {
+      return res.status(400).json({ message: "Only approved reservations can be completed" });
+    }
+
+    reservation.status = "completed";
+    await reservation.save();
+
+    res.json(reservation);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
 module.exports = {
   createReservation,
   getMyReservations,
@@ -109,4 +130,5 @@ module.exports = {
   updateReservation,
   cancelReservation,
   updateReservationStatus,
+  freeUpReservation,
 };

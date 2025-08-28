@@ -15,16 +15,16 @@ export default function Table() {
 
   const tables = useMemo(
     () => [
-      { id: 1, type: "window", x: 10, y: 18, seats: 2 },
-      { id: 2, type: "window", x: 25, y: 18, seats: 2 },
-      { id: 3, type: "center", x: 45, y: 35, seats: 4 },
-      { id: 4, type: "center", x: 60, y: 40, seats: 4 },
-      { id: 5, type: "center", x: 38, y: 55, seats: 4 },
-      { id: 6, type: "center", x: 58, y: 58, seats: 4 },
-      { id: 7, type: "band", x: 75, y: 64, seats: 4 },
-      { id: 8, type: "window", x: 15, y: 44, seats: 2 },
-      { id: 9, type: "window", x: 28, y: 44, seats: 2 },
-      { id: 10, type: "window", x: 20, y: 68, seats: 2 },
+      { id: 1, type: "window", x: 10, y: 18 },
+      { id: 2, type: "window", x: 25, y: 18 },
+      { id: 3, type: "center", x: 45, y: 35 },
+      { id: 4, type: "center", x: 60, y: 40 },
+      { id: 5, type: "center", x: 38, y: 55 },
+      { id: 6, type: "center", x: 58, y: 58 },
+      { id: 7, type: "band", x: 75, y: 64 },
+      { id: 8, type: "window", x: 15, y: 44 },
+      { id: 9, type: "window", x: 28, y: 44 },
+      { id: 10, type: "window", x: 20, y: 68 },
     ],
     []
   );
@@ -51,18 +51,32 @@ export default function Table() {
     setSelectedTable(table);
   };
   const closeForm = () => setSelectedTable(null);
+  const getTableStatus = (tableId) => {
+    // Latest reservation from Redux (authoritative)
+    const reduxRes = reservations
+      .filter((r) => r.tableId === tableId)
+      .sort(
+        (a, b) =>
+          new Date(b.date + " " + b.time) - new Date(a.date + " " + a.time)
+      )[0];
 
-  const getTableStatus = (id) => {
-    const booking = bookings.find((b) => b.tableId === id);
-    if (booking) return booking.status || "pending";
+    // Latest local booking
+    const localRes = bookings
+      .filter((r) => r.tableId === tableId)
+      .sort(
+        (a, b) =>
+          new Date(b.date + " " + b.time) - new Date(a.date + " " + a.time)
+      )[0];
 
-    const res = reservations.find((r) => r.tableId === id);
-    if (res) return res.status;
+    // Decide priority: Redux reservation overrides local if exists
+    const latest = reduxRes || localRes;
 
+    if (!latest) return "available";
+    if (latest.status === "approved") return "approved";
+    if (latest.status === "pending") return "pending";
     return "available";
   };
 
-  
   const getTableBg = (status) => {
     switch (status) {
       case "approved":
@@ -156,7 +170,7 @@ export default function Table() {
 
                 {status === "approved" && (
                   <span className="absolute -top-2 -right-2 text-[10px] bg-black/60 text-white px-1.5 py-0.5 rounded-full">
-                    RES
+                    RESERVED
                   </span>
                 )}
                 {status === "pending" && (
@@ -198,7 +212,14 @@ export default function Table() {
           table={selectedTable}
           onClose={closeForm}
           onSuccess={(res) => {
-            setBookings((prev) => [...prev, res]); // add new reservation
+            // 1. Update local UI immediately
+            setBookings((prev) => [
+              ...prev,
+              { ...res, id: crypto.randomUUID(), status: "pending" },
+            ]);
+
+            // 2. Refresh Redux so we get the authoritative state from backend
+            dispatch(fetchMyReservations());
           }}
         />
       )}
