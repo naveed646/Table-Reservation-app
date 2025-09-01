@@ -67,7 +67,7 @@ function MenuList() {
             <div>
               <h3 className="font-bold">{item.title}</h3>
               <p className="text-gray-600">{item.description}</p>
-              <p className="text-green-600 font-semibold">${item.price}</p>
+              <p className="text-green-600 font-semibold">Rs.{item.price}</p>
             </div>
           </div>
           <div className="mr-10 flex gap-3">

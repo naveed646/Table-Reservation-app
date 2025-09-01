@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { addMenu } from "../../../api/menu";
 
-function AddMenuItem({ onAdd }) {
+function AddMenuItem() {
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -20,11 +20,11 @@ function AddMenuItem({ onAdd }) {
       if (form.imageUrl) formData.append("image", form.imageUrl);
 
       await addMenu(formData);
-      setMessage("✅ Menu item added successfully!");
+      setMessage("Menu item added successfully!");
       setForm({ title: "", description: "", price: "", imageUrl: null });
-      onAdd(); // refresh menu list
+      
     } catch (err) {
-      setMessage("❌ Failed to add menu item.");
+      setMessage("Failed to add menu item.");
       console.error(err);
     }
   };
@@ -72,7 +72,7 @@ function AddMenuItem({ onAdd }) {
         {/* Price */}
         <div className="relative">
           <input
-            type="number"
+            type="text"
             placeholder=" "
             value={form.price}
             onChange={(e) => setForm({ ...form, price: e.target.value })}
@@ -107,6 +107,7 @@ function AddMenuItem({ onAdd }) {
         {/* Submit Button */}
         <button
           type="submit"
+          message="Item Added Succefully"
           className="w-full bg-black hover:bg-zinc-600 cursor-pointer text-white font-semibold py-2 rounded-lg shadow-md transition transform hover:-translate-y-0.5 hover:shadow-lg"
         >
           Add Item

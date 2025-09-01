@@ -8,7 +8,7 @@ import {
   FaClipboardCheck,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllReservations } from "../../src/features/reservations/reservationSlice";
+import { fetchAllReservations } from "../../src/redux/reservations/reservationSlice";
 export default function AdminDashboard() {
   const dispatch = useDispatch();
 

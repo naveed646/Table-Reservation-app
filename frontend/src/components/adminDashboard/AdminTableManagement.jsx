@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import {
   fetchAllReservations,
   changeReservationStatus,
-} from "../../features/reservations/reservationSlice";
+} from "../../redux/reservations/reservationSlice";
 
 export default function AdminReservationTable() {
   const [searchTerm, setSearchTerm] = useState("");

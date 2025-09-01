@@ -19,7 +19,7 @@ function Navbar() {
             src={logo}
             alt="logo"
           />
-          <h1 className="text-white text-lg md:text-xl font-bold">
+          <h1 onClick={() => navigate("/")} className="text-white cursor-pointer text-lg md:text-xl font-bold">
             คเєςє ๏ภ קlคtє
           </h1>
         </div>

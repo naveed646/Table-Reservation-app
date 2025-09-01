@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import loginImg from "../../assets/loginImg.jpg";
 import { loginUser } from "../../api/auth";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../features/auth/authSlice";
+import { setUser } from "../../redux/auth/authSlice";
 
 function Login() {
   const {

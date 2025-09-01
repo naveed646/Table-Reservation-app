@@ -1,41 +1,32 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
-import { reviews } from "../../data";
-
-
 
 export default function Ratings() {
+  const [rating, setRating] = useState(4.5); // avg rating
+  const [totalReviews] = useState(120);
+
+  useEffect(() => {
+
+    const interval = setInterval(() => {
+      setRating((prev) => (prev >= 5 ? 4.5 : prev + 0.1));
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="bg-gradient-to-tr from-orange-50 via-white to-orange-100 py-12 px-6 min-h-screen">
-      <h2 className="text-3xl font-bold text-center mb-8 text-orange-800">
-        Customer Reviews
-      </h2>
-
-      <div className="grid md:grid-cols-3 gap-6">
-        {reviews.map((review) => (
-          <div
-            key={review.id}
-            className="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition"
-          >
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
-              {review.name}
-            </h3>
-
-            <div className="flex items-center mb-3">
-              {[...Array(5)].map((_, i) => (
-                <FaStar
-                  key={i}
-                  className={`${
-                    i < review.rating ? "text-yellow-400" : "text-gray-300"
-                  }`}
-                />
-              ))}
-            </div>
-
-            <p className="text-gray-600 italic">"{review.comment}"</p>
-          </div>
+    <div className="py-12 px-6 text-center bg-gradient-to-tr from-orange-50 via-white to-orange-100 mt-12">
+      <h2 className="text-3xl font-bold mb-6 text-orange-800">Customer Ratings</h2>
+      <div className="flex items-center justify-center space-x-2 mb-3">
+        {[...Array(5)].map((_, i) => (
+          <FaStar
+            key={i}
+            className={i < Math.round(rating) ? "text-yellow-400 text-2xl" : "text-gray-300 text-2xl"}
+          />
         ))}
       </div>
+      <p className="text-gray-700 font-semibold">
+        {rating.toFixed(1)} / 5.0 ({totalReviews}+ reviews)
+      </p>
     </div>
   );
 }

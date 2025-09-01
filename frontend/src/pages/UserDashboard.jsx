@@ -1,12 +1,23 @@
 import React, { useEffect, useMemo } from "react";
 import { FaUtensils, FaChair, FaCheckCircle } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchMyReservations } from "../redux/reservations/reservationSlice"; 
 
 export default function UserDashboard() {
+  const dispatch = useDispatch();
+
   const user = useSelector((state) => state.auth.user);
   const username = user?.name || "Guest";
   const reservations = useSelector((state) => state.reservations.mine || []);
+
+  // get all reservations...
+
+  useEffect(() => {
+    if (user?._id) {
+      dispatch(fetchMyReservations());
+    }
+  }, [dispatch, user?._id]);
 
   // Define tables
   const tables = useMemo(
@@ -101,9 +112,7 @@ export default function UserDashboard() {
                     <span>
                       Table {table?.id} ({table?.type}, {table?.seats} seats)
                     </span>
-                    <span className="text-blue-600 font-medium">
-                      Approved
-                    </span>
+                    <span className="text-blue-600 font-medium">Approved</span>
                   </li>
                 );
               })}

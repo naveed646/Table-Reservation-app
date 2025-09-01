@@ -2,19 +2,16 @@ import React, { useState } from "react";
 import { FaUserCircle, FaCamera, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../features/auth/authSlice"; // ✅ import logout action
+import { logout } from "../../redux/auth/authSlice"; 
 
 function AdminProfile({ menuRef }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Redux user
   const user = useSelector((state) => state.auth.user);
 
-  // Profile image state (start with user.profilePicture if available)
   const [previewImage, setPreviewImage] = useState(user?.profilePicture || null);
 
-  // Handle profile image upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {

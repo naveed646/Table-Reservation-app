@@ -12,7 +12,7 @@ const upload = multer({ storage });
 
 // Routes
 router.get("/", getMenu);
-router.post("/", upload.single("image"), addMenu);  // 👈 multer attached
+router.post("/", upload.single("image"), addMenu);
 router.delete("/:id", deleteMenu);
 router.put("/:id", upload.single("image"), updateMenu);
 

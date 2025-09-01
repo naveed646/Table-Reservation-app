@@ -4,13 +4,14 @@ import { FaConciergeBell, FaMusic } from "react-icons/fa";
 import { ImEnter } from "react-icons/im";
 import restaurant from "../../assets/restaurant.jpg";
 import ReservationForm from "./ReservationForm";
-import { fetchMyReservations } from "../../features/reservations/reservationSlice";
+import { fetchMyReservations } from "../../redux/reservations/reservationSlice";
 
 export default function Table() {
   const dispatch = useDispatch();
   const reservations = useSelector((state) => state.reservations.mine);
 
   const [selectedTable, setSelectedTable] = useState(null);
+  const [selectedDate, setSelectedDate] = useState("");
   const [bookings, setBookings] = useState([]);
 
   const tables = useMemo(
@@ -29,38 +30,51 @@ export default function Table() {
     []
   );
 
-  // Load reservations once
+  // Load all reservations for current user
   useEffect(() => {
     dispatch(fetchMyReservations());
   }, [dispatch]);
 
-  // Optional polling every 10s
+  // Fetch reservations for the selected date
+  useEffect(() => {
+    if (!selectedDate) return;
+
+    const fetchReservations = async () => {
+      try {
+        const res = await fetch(`/api/reservations?date=${selectedDate}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        const data = await res.json();
+        setBookings(data); // update local bookings state
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchReservations();
+  }, [selectedDate]);
+
+  // Optional polling every 10s to refresh user reservations
   useEffect(() => {
     const interval = setInterval(() => dispatch(fetchMyReservations()), 10000);
     return () => clearInterval(interval);
   }, [dispatch]);
 
-  // Open/close modal
-  const openForm = (table) => {
-    const existing = reservations.find((r) => r.tableId === table.id);
-    if (
-      existing &&
-      (existing.status === "pending" || existing.status === "approved")
-    )
-      return;
-    setSelectedTable(table);
-  };
+  // Open/close reservation form
+  const openForm = (table) => setSelectedTable(table);
   const closeForm = () => setSelectedTable(null);
+
+  // Determine table status based on date/time conflicts
   const getTableStatus = (tableId) => {
-    // Latest reservation from Redux (authoritative)
+    // Check Redux reservations first
     const reduxRes = reservations
-      .filter((r) => r.tableId === tableId)
+      .filter((r) => r.tableId === tableId && r.date === selectedDate)
       .sort(
         (a, b) =>
           new Date(b.date + " " + b.time) - new Date(a.date + " " + a.time)
       )[0];
 
-    // Latest local booking
+    // Check local bookings for this date
     const localRes = bookings
       .filter((r) => r.tableId === tableId)
       .sort(
@@ -68,9 +82,7 @@ export default function Table() {
           new Date(b.date + " " + b.time) - new Date(a.date + " " + a.time)
       )[0];
 
-    // Decide priority: Redux reservation overrides local if exists
     const latest = reduxRes || localRes;
-
     if (!latest) return "available";
     if (latest.status === "approved") return "approved";
     if (latest.status === "pending") return "pending";
@@ -115,7 +127,6 @@ export default function Table() {
         >
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[1px]" />
 
-          {/* Reception */}
           <div className="flex justify-center mt-2">
             <Area
               title="Reception"
@@ -125,12 +136,10 @@ export default function Table() {
             />
           </div>
 
-          {/* Band */}
           <div className="absolute right-24 bottom-4">
             <Area title="Live Band" sub="Stage" icon={<FaMusic />} tone="sky" />
           </div>
 
-          {/* Entrance */}
           <div className="absolute right-10 top-30">
             <div className="flex flex-col items-center justify-center h-50 p-2 w-16 text-white rounded-md shadow-lg">
               {"Entrance".split("").map((char, index) => (
@@ -212,15 +221,13 @@ export default function Table() {
           table={selectedTable}
           onClose={closeForm}
           onSuccess={(res) => {
-            // 1. Update local UI immediately
             setBookings((prev) => [
               ...prev,
               { ...res, id: crypto.randomUUID(), status: "pending" },
             ]);
-
-            // 2. Refresh Redux so we get the authoritative state from backend
             dispatch(fetchMyReservations());
           }}
+          onDateChange={setSelectedDate} // pass selected date to Table
         />
       )}
     </div>

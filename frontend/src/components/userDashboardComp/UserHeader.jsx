@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import UserProfile from "./UserProfile";
 import { useDispatch } from "react-redux";
-import { logout } from "../../features/auth/authSlice";
+import { logout } from "../../redux/auth/authSlice";
 
 function HeaderAndProfile({ toggleSidebar }) {
   const [showProfile, setShowProfile] = useState(false);

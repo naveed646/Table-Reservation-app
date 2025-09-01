@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { createReservation } from "../../api/reservation";
 
-export default function ReservationForm({ table, onClose, onSuccess }) {
+export default function ReservationForm({
+  table,
+  onClose,
+  onSuccess,
+  onDateChange,
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -21,7 +26,7 @@ export default function ReservationForm({ table, onClose, onSuccess }) {
       date: "",
       time: "",
       day: "",
-      duration: "90",
+      duration: 90,
       guests: 2,
       notes: "",
     },
@@ -35,17 +40,24 @@ export default function ReservationForm({ table, onClose, onSuccess }) {
       const d = new Date(`${watchDate}T00:00:00`);
       const day = d.toLocaleDateString(undefined, { weekday: "long" });
       setValue("day", day, { shouldValidate: true });
+      if (onDateChange) onDateChange(watchDate); // notify parent Table
     } else {
       setValue("day", "");
     }
-  }, [watchDate, setValue]);
+  }, [watchDate, setValue, onDateChange]);
 
-  // reset 
+  // Reset form when table changes
   useEffect(() => {
-    reset({ ...table, tableId: table.id, duration: "90", guests: 2, notes: "" });
+    reset({
+      ...table,
+      tableId: table.id,
+      duration: 90,
+      guests: 2,
+      notes: "",
+    });
   }, [table, reset]);
 
-  // submit handler
+  // Submit handler
   const onSubmit = async (data) => {
     setLoading(true);
     setError("");
@@ -54,9 +66,9 @@ export default function ReservationForm({ table, onClose, onSuccess }) {
     try {
       const res = await createReservation(data);
       setSuccess("Reservation sent ✅ Waiting for admin approval.");
-      if (onSuccess) onSuccess(res); // notify parent to refresh list
+      if (onSuccess) onSuccess(res); // notify parent Table to refresh bookings
       setTimeout(() => {
-        onClose(); // close modal after success
+        onClose();
       }, 1500);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to book table");
@@ -78,7 +90,8 @@ export default function ReservationForm({ table, onClose, onSuccess }) {
             <p className="text-sm text-slate-500">
               {table.type === "window" && "Window side"}
               {table.type === "center" && "Center area"}
-              {table.type === "band" && "Near live band"} · Seats {table.seats}
+              {table.type === "band" && "Near live band"} · Seats{" "}
+              {table.seats || "-"}
             </p>
           </div>
           <button
@@ -104,7 +117,9 @@ export default function ReservationForm({ table, onClose, onSuccess }) {
               })}
             />
             {errors.name && (
-              <p className="text-xs text-rose-600 mt-1">{errors.name.message}</p>
+              <p className="text-xs text-rose-600 mt-1">
+                {errors.name.message}
+              </p>
             )}
           </div>
 
@@ -148,32 +163,25 @@ export default function ReservationForm({ table, onClose, onSuccess }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">Duration</label>
-              <select
+              <label className="block text-sm font-medium">
+                Duration (mins)
+              </label>
+              <input
+                type="number"
                 className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-900"
-                {...register("duration", { required: true })}
-              >
-                <option value="60">60 mins</option>
-                <option value="90">90 mins</option>
-                <option value="120">120 mins</option>
-                <option value="150">150 mins</option>
-              </select>
+                {...register("duration", { required: true, min: 30, max: 180 })}
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-medium">Guests</label>
-              <select
+              <input
+                type="number"
                 className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-900"
-                {...register("guests", { required: true, min: 1 })}
-              >
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {i + 1}
-                  </option>
-                ))}
-              </select>
+                {...register("guests", { required: true, min: 1, max: 10 })}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium">Special Notes</label>
@@ -185,7 +193,6 @@ export default function ReservationForm({ table, onClose, onSuccess }) {
             </div>
           </div>
 
-          {/* Feedback */}
           {error && <p className="text-sm text-rose-600">{error}</p>}
           {success && <p className="text-sm text-green-600">{success}</p>}
 

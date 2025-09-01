@@ -1,22 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaUserCircle, FaCamera } from "react-icons/fa";
-import { user as initialUser } from "../../data/index";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { setUser } from "../../redux/auth/authSlice";
 
 function UserProfile({ profileRef }) {
-  const [user, setUser] = useState(initialUser);
-  const [previewImage, setPreviewImage] = useState(user.profilePicture || null);
   const navigate = useNavigate();
-  const myUser=useSelector((state)=> state.auth.user)
+  const dispatch = useDispatch();
+  const myUser = useSelector((state) => state.auth.user);
 
-  // Handle profile image upload
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewImage(imageUrl);
-      setUser({ ...user, profilePicture: imageUrl });
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    try {
+      const res = await axios.put("/api/users/me/avatar", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+      });
+      dispatch(setUser(res.data)); // ✅ update redux + localStorage
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -27,9 +35,9 @@ function UserProfile({ profileRef }) {
     >
       {/* Profile Picture */}
       <div className="relative">
-        {previewImage ? (
+        {myUser?.profilePicture ? (
           <img
-            src={previewImage}
+            src={myUser.profilePicture}
             alt="Profile"
             className="w-20 h-20 rounded-full object-cover border-2 border-orange-500"
           />
@@ -50,11 +58,8 @@ function UserProfile({ profileRef }) {
       </div>
 
       {/* User Info */}
-      <h2 className="text-lg font-semibold mt-2">{myUser.name}</h2>
-      <p className="text-gray-500 text-sm">{myUser.email}</p>
-      {/* <div className="bg-orange-100 text-orange-700 mt-3 px-4 py-2 rounded-full text-sm">
-        Loyalty Points: <strong>{user.loyaltyPoints}</strong>
-      </div> */}
+      <h2 className="text-lg font-semibold mt-2">{myUser?.name}</h2>
+      <p className="text-gray-500 text-sm">{myUser?.email}</p>
 
       {/* Settings Button */}
       <button

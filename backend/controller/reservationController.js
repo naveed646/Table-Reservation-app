@@ -1,10 +1,35 @@
 const Reservation = require("../models/Reservation");
 
-// ✅ Create reservation (User)
+// create reservation 
 const createReservation = async (req, res) => {
   try {
     const { tableId, name, date, time, day, duration, guests, notes } = req.body;
 
+    // Parse requested start and end time
+    const requestedStart = new Date(`${date}T${time}`);
+    const requestedEnd = new Date(requestedStart.getTime() + duration * 60000);
+
+    // Find all existing reservations for the table on the same date
+    const reservations = await Reservation.find({
+      tableId,
+      date,
+      status: { $in: ["pending", "approved"] },
+    });
+
+    // Check for overlap
+    const overlap = reservations.find((r) => {
+      const existingStart = new Date(`${r.date}T${r.time}`);
+      const existingEnd = new Date(existingStart.getTime() + r.duration * 60000);
+      return requestedStart < existingEnd && requestedEnd > existingStart;
+    });
+
+    if (overlap) {
+      return res.status(400).json({
+        message: `Table ${tableId} is already reserved at ${overlap.time} for ${overlap.duration} mins. Please select another time.`,
+      });
+    }
+
+    // Create reservation
     const reservation = await Reservation.create({
       user: req.user._id,
       tableId,
@@ -24,7 +49,8 @@ const createReservation = async (req, res) => {
   }
 };
 
-// ✅ Get logged-in user’s reservations
+
+// Get logged-in user’s reservations
 const getMyReservations = async (req, res) => {
   try {
     const reservations = await Reservation.find({ user: req.user._id });
@@ -34,7 +60,7 @@ const getMyReservations = async (req, res) => {
   }
 };
 
-// ✅ Get all reservations (Admin only)
+// Get all reservations (Admin only)
 const getAllReservations = async (req, res) => {
   try {
     const reservations = await Reservation.find().populate("user", "name email");
@@ -44,7 +70,7 @@ const getAllReservations = async (req, res) => {
   }
 };
 
-// ✅ Update guests/duration (User)
+// Update guests/duration (User)
 const updateReservation = async (req, res) => {
   try {
     const { guests, duration } = req.body;
@@ -66,7 +92,7 @@ const updateReservation = async (req, res) => {
   }
 };
 
-// ✅ Cancel reservation (User)
+// Cancel reservation (User)
 const cancelReservation = async (req, res) => {
   try {
     const reservation = await Reservation.findById(req.params.id);
@@ -85,7 +111,7 @@ const cancelReservation = async (req, res) => {
   }
 };
 
-// ✅ Approve/Cancel (Admin)
+// Approve/Cancel (Admin)
 const updateReservationStatus = async (req, res) => {
   try {
     const { status } = req.body;
@@ -102,7 +128,7 @@ const updateReservationStatus = async (req, res) => {
   }
 };
 
-// ✅ Free up a reservation (Admin)
+// Free up a reservation (Admin)
 const freeUpReservation = async (req, res) => {
   try {
     const reservation = await Reservation.findById(req.params.id);

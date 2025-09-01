@@ -26,6 +26,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminMenu from "./components/adminDashboard/AdminMenu";
 import MenuList from "./components/adminDashboard/adminMenuCode/MenuList";
 import MenuItems from "./components/homepagecomp/MenuItems";
+import MenuItemDetail from "./components/homepagecomp/MenuItemDetail";
+
 
 function App() {
   const router = createBrowserRouter([
@@ -67,131 +69,181 @@ function App() {
           element: <MenuItems />,
         },
         {
+          path: "/menudetail/:id",
+          element: <MenuItemDetail/>,
+        },
+        {
           path: "*",
           element: <NotPageFound />,
         },
       ],
     },
 
+    // User Layout with ProtectedRoute outside
+{
+  path: "/",
+  element: <ProtectedRoute role="user" />, 
+  children: [
     {
-      path: "/",
-      element: <UserDashBoardLayout />,
+      path: "",
+      element: <UserDashBoardLayout />,      
       children: [
-        {
-          path: "dashboard",
-          element: (
-            <ProtectedRoute role="user">
-              <UserDashboard />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "reservation",
-          element: (
-            <ProtectedRoute>
-              <ReservationTable />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "table",
-          element: (
-            <ProtectedRoute>
-              <Table />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "offer",
-          element: (
-            <ProtectedRoute>
-              <Offer />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "settings",
-          element: (
-            <ProtectedRoute>
-              <UserSettings />
-            </ProtectedRoute>
-          ),
-        },
+        { path: "dashboard", element: <UserDashboard /> },
+        { path: "reservation", element: <ReservationTable /> },
+        { path: "table", element: <Table /> },
+        { path: "offer", element: <Offer /> },
+        { path: "settings", element: <UserSettings /> },
       ],
     },
+  ],
+},
+
+// Admin Layout with ProtectedRoute outside
+{
+  path: "/",
+  element: <ProtectedRoute role="admin" />, // protect once
+  children: [
+    {
+      path: "",
+      element: <AdminLayout />,          
+      children: [
+        { path: "adminDashboard", element: <AdminDashboard /> },
+        { path: "admindheader", element: <AdminHeader /> },
+        { path: "adminsidebar", element: <AdminSidebar /> },
+        { path: "adminreservation", element: <AdminReservationTable /> },
+        { path: "admintable", element: <AdminTableManagement /> },
+        { path: "adminsettings", element: <AdminSettings /> },
+        { path: "adminmenu", element: <AdminMenu /> },
+        { path: "/menulist", element: <MenuList /> }, 
+      ],
+    },
+  ],
+},
+
+
+
+// old one...
+
+      // for user..
+    // {
+    //   path: "/",
+    //   element: <UserDashBoardLayout />,
+    //   children: [
+    //     {
+    //       path: "dashboard",
+    //       element: (
+    //         <ProtectedRoute role="user">
+    //           <UserDashboard />
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //     {
+    //       path: "reservation",
+    //       element: (
+    //         <ProtectedRoute>
+    //           <ReservationTable />
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //     {
+    //       path: "table",
+    //       element: (
+    //         <ProtectedRoute>
+    //           <Table />
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //     {
+    //       path: "offer",
+    //       element: (
+    //         <ProtectedRoute>
+    //           <Offer />
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //     {
+    //       path: "settings",
+    //       element: (
+    //         <ProtectedRoute>
+    //           <UserSettings />
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //   ],
+    // },
 
     // for admin Layout.....
 
-    {
-      path: "/",
-      element: <AdminLayout />,
-      children: [
-        {
-          path: "adminDashboard",
-          element: (
-            <ProtectedRoute role="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "admindheader",
-          element: (
-            <ProtectedRoute role="admin">
-              <AdminHeader />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "adminsidebar",
-          element: (
-            <ProtectedRoute role="admin">
-              <AdminSidebar />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "adminreservation",
-          element: (
-            <ProtectedRoute role="admin">
-              <AdminReservationTable />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "admintable",
-          element: (
-            <ProtectedRoute role="admin">
-              <AdminTableManagement />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "adminsettings",
-          element: (
-            <ProtectedRoute role="admin">
-              <AdminSettings />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "adminmenu",
-          element: (
-            <ProtectedRoute role="admin">
-              <AdminMenu/>
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "/menulist",
-          element: (
-            <ProtectedRoute role="admin">
-              <MenuList/>
-            </ProtectedRoute>
-          ),
-        },
-      ],
-    },
+    // {
+    //   path: "/",
+    //   element: <AdminLayout />,
+    //   children: [
+    //     {
+    //       path: "adminDashboard",
+    //       element: (
+    //         <ProtectedRoute role="admin">
+    //           <AdminDashboard />
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //     {
+    //       path: "admindheader",
+    //       element: (
+    //         <ProtectedRoute role="admin">
+    //           <AdminHeader />
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //     {
+    //       path: "adminsidebar",
+    //       element: (
+    //         <ProtectedRoute role="admin">
+    //           <AdminSidebar />
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //     {
+    //       path: "adminreservation",
+    //       element: (
+    //         <ProtectedRoute role="admin">
+    //           <AdminReservationTable />
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //     {
+    //       path: "admintable",
+    //       element: (
+    //         <ProtectedRoute role="admin">
+    //           <AdminTableManagement />
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //     {
+    //       path: "adminsettings",
+    //       element: (
+    //         <ProtectedRoute role="admin">
+    //           <AdminSettings />
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //     {
+    //       path: "adminmenu",
+    //       element: (
+    //         <ProtectedRoute role="admin">
+    //           <AdminMenu/>
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //     {
+    //       path: "/menulist",
+    //       element: (
+    //         <ProtectedRoute role="admin">
+    //           <MenuList/>
+    //         </ProtectedRoute>
+    //       ),
+    //     },
+    //   ],
+    // },
   ]);
 
   return (

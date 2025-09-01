@@ -1,7 +1,7 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedRoute = ({ children, role }) => {
+const ProtectedRoute = ({ role }) => {
   const token = localStorage.getItem("token");
 
   if (!token) return <Navigate to="/login" replace />;
@@ -12,17 +12,18 @@ const ProtectedRoute = ({ children, role }) => {
 
     const decoded = JSON.parse(atob(payload));
 
-    // Token expiration chec
+    // Check token expiry
     if (decoded.exp * 1000 < Date.now()) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       return <Navigate to="/login" replace />;
     }
-    // for check the role...
 
+    // Check role
     if (role && decoded.role !== role) return <Navigate to="/" replace />;
 
-    return children;
+    // ✅ Important: render nested routes via <Outlet />
+    return <Outlet />;
   } catch (err) {
     console.error("Token decode error:", err);
     localStorage.removeItem("token");
