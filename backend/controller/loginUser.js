@@ -30,11 +30,14 @@ const loginUser = async (req, res) => {
       role: user.role,
       name: user.name,
       email: user.email,
+      profilePicture: user.profilePicture,
       token: generateToken(user.id, user.role),
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 module.exports = { loginUser };

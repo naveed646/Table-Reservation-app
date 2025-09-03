@@ -1,30 +1,39 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../redux/auth/authSlice";
-import { FaCamera } from "react-icons/fa";
+import { uploadAvatar, updateProfile } from "../../api/auth";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Settings() {
   const dispatch = useDispatch();
   const myUser = useSelector((state) => state.auth.user);
 
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const [formData, setFormData] = useState({
     name: myUser?.name || "",
     email: myUser?.email || "",
+    currentPassword: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [avatarPreview, setAvatarPreview] = useState(myUser?.profilePicture || null);
+  const [avatarPreview, setAvatarPreview] = useState(
+    myUser?.profilePicture
+      ? `http://localhost:8000${myUser.profilePicture}`
+      : ""
+  );
   const [loading, setLoading] = useState(false);
 
-  // 🔹 Handle text input
+  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 🔹 Handle profile image upload
-  const handleImageUpload = async (e) => {
+  // Handle avatar upload
+  const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -32,118 +41,195 @@ function Settings() {
     formDataImg.append("avatar", file);
 
     try {
-      const res = await axios.put("/api/users/me/avatar", formDataImg, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      });
-      dispatch(setUser(res.data));
-      setAvatarPreview(res.data.profilePicture);
+      const updatedUser = await uploadAvatar(formDataImg);
+      dispatch(setUser(updatedUser));
+      setAvatarPreview(`http://localhost:8000${updatedUser.profilePicture}`);
+      alert("Avatar updated successfully!");
     } catch (err) {
       console.error(err);
-      alert("Image upload failed!");
+      alert(err.message || "Image upload failed!");
     }
   };
 
-  // 🔹 Handle save profile info
+  // Handle profile + password update
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
+    // Validate passwords
+    if (formData.password && formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    // If password is provided, currentPassword must be filled
+    if (formData.password && !formData.currentPassword) {
+      alert("Current password is required to change password!");
+      return;
+    }
+
+    setLoading(true);
     try {
-      const res = await axios.put("/api/users/me", formData, { withCredentials: true });
-      dispatch(setUser(res.data)); // updates redux + localStorage
-      alert("Profile updated!");
+      const payload = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+      };
+
+      if (formData.password) {
+        payload.currentPassword = formData.currentPassword;
+        payload.newPassword = formData.password;
+        payload.confirmPassword = formData.confirmPassword;
+      }
+
+      // Update profile + password
+      const updatedUser = await updateProfile(payload);
+
+      // Update Redux store
+      dispatch(setUser(updatedUser.user));
+
+      // Update token if password changed
+      if (formData.password) {
+        localStorage.setItem("token", updatedUser.token);
+        alert("Password updated successfully!");
+        setFormData({
+          ...formData,
+          currentPassword: "",
+          password: "",
+          confirmPassword: "",
+        });
+      } else {
+        alert("Profile updated successfully!");
+      }
     } catch (err) {
-      console.error(err);
-      alert("Update failed!");
+      console.error("Update error:", err);
+      alert(err.response?.data?.message || err.message || "Update failed!");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-5xl mx-auto flex bg-white shadow-lg rounded-xl mt-10 overflow-hidden">
-      {/* Left side: Profile Card */}
-      <div className="w-1/3 bg-gray-100 flex flex-col items-center p-6 border-r">
-        <div className="relative">
-          <img
-            src={avatarPreview || "https://via.placeholder.com/150"}
-            alt="Profile"
-            className="w-32 h-32 rounded-full object-cover border-4 border-orange-500"
-          />
-          <label className="absolute bottom-2 right-2 bg-orange-600 p-2 rounded-full cursor-pointer">
-            <FaCamera className="text-white text-sm" />
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageUpload}
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-2xl font-semibold mb-6">Account Settings</h1>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
+          <input type="text" style={{ display: "none" }} />
+          <input type="password" style={{ display: "none" }} />
+
+          <div className="flex items-center space-x-4">
+            <img
+              src={avatarPreview || "change"}
+              alt="Profile"
+              className="w-24 h-24 rounded-full object-cover border"
             />
-          </label>
-        </div>
+            <div>
+              <label
+                htmlFor="avatarUpload"
+                className="cursor-pointer px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+              >
+                Change Avatar
+              </label>
+              <input
+                id="avatarUpload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarChange}
+              />
+            </div>
+          </div>
 
-        <h2 className="mt-4 text-xl font-bold">{formData.name}</h2>
-        <p className="text-gray-600">{formData.email}</p>
-      </div>
-
-      {/* Right side: Editable Info */}
-      <div className="w-2/3 p-8">
-        <h2 className="text-2xl font-bold mb-6">Account Settings</h2>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Full Name</label>
+            <label className="block text-sm font-medium">Name</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="mt-1 w-full p-2 border rounded-lg"
+              className="w-full border p-2 rounded-lg"
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium">Email</label>
             <input
               type="email"
               name="email"
+              readOnly // 🔹 make it not editable
               value={formData.email}
               onChange={handleChange}
-              className="mt-1 w-full p-2 border rounded-lg"
+              className="w-full border p-2 rounded-lg"
             />
           </div>
 
-          {/* Password */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">New Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="mt-1 w-full p-2 border rounded-lg"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="mt-1 w-full p-2 border rounded-lg"
-              />
-            </div>
+          {/* Current Password */}
+          <div className="relative">
+            <label className="block text-sm font-medium">
+              Current Password
+            </label>
+            <input
+              type={showCurrent ? "text" : "password"}
+              name="currentPassword"
+              value={formData.currentPassword}
+              onChange={handleChange}
+              className="w-full border p-2 rounded-lg"
+              placeholder="Required to change password"
+              autoComplete="new-password"
+            />
+            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+            onClick={()=> setShowCurrent(!showCurrent)}
+            >
+
+              {showCurrent ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
 
-          {/* Save Button */}
+          {/* New Password */}
+          <div className="relative">
+            <label className="block text-sm font-medium">New Password</label>
+            <input
+              type={showNew ? "text" :"password"}
+              name="password"
+              placeholder="Leave blank to keep unchanged"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full border p-2 rounded-lg"
+            />
+             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+             onClick={()=> setShowNew(!showNew)}
+             >
+              {showNew ?<FaEyeSlash/> : <FaEye/>}
+
+             </span>
+          </div>
+
+          {/* Confirm Password */}
+          <div className="relative">
+            <label className="block text-sm font-medium">
+              Confirm Password
+            </label>
+            <input
+              type={showConfirm ? "text": "password"}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full border p-2 rounded-lg"
+            />
+             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+             onClick={()=> setShowConfirm(!showConfirm)}
+             >
+              {showConfirm ? <FaEyeSlash/> : <FaEye/>}
+
+
+             </span>
+            
+          </div>
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition"
+            className="px-6 py-2 bg-black text-white rounded-lg hover:bg-zinc-600 disabled:opacity-50"
           >
             {loading ? "Saving..." : "Save Changes"}
           </button>

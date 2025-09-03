@@ -2,33 +2,71 @@ import React, { useState } from "react";
 import { FaUserCircle, FaCamera, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../redux/auth/authSlice"; 
+import { logout, setUser } from "../../redux/auth/authSlice";
+import { uploadAvatar, updateProfile } from "../../api/auth"; 
 
 function AdminProfile({ menuRef }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const user = useSelector((state) => state.auth.user);
 
-  const [previewImage, setPreviewImage] = useState(user?.profilePicture || null);
+  const [previewImage, setPreviewImage] = useState(
+    user?.profilePicture ? `http://localhost:8000${user.profilePicture}` : null
+  );
+  const [name, setName] = useState(user?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [loading, setLoading] = useState(false);
 
-  const handleImageUpload = (e) => {
+  // Update profile picture
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewImage(imageUrl);
+    if (!file) return;
 
-      // ❗ if you want to persist uploaded profile image in Redux/backend,
-      // you can dispatch an update here
-      // dispatch(updateUser({ ...user, profilePicture: imageUrl }));
+    const tempUrl = URL.createObjectURL(file);
+    setPreviewImage(tempUrl);
+
+    try {
+      const formData = new FormData();
+      formData.append("avatar", file);
+
+      const updatedUser = await uploadAvatar(formData);
+      dispatch(setUser(updatedUser));
+      setPreviewImage(`http://localhost:8000${updatedUser.profilePicture}`);
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Image upload failed!");
     }
   };
 
-  // Logout handler
+  // Update name or email
+  const handleInputChange = (setter) => (e) => {
+    setter(e.target.value);
+  };
+
+  const handleInputBlur = async () => {
+    if (name === user.name && email === user.email) return; // nothing changed
+    setLoading(true);
+
+    try {
+      const updatedUser = await updateProfile({
+        name: name.trim(),
+        email: email.trim(),
+      });
+      dispatch(setUser(updatedUser));
+      alert("Profile updated successfully!");
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || err.message || "Update failed!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    dispatch(logout()); 
+    dispatch(logout());
     navigate("/");
   };
 
@@ -48,8 +86,6 @@ function AdminProfile({ menuRef }) {
         ) : (
           <FaUserCircle className="text-6xl text-orange-600" />
         )}
-
-        {/* Upload button */}
         <label className="absolute bottom-0 right-0 bg-orange-500 p-2 rounded-full cursor-pointer">
           <FaCamera className="text-white text-sm" />
           <input
@@ -62,8 +98,23 @@ function AdminProfile({ menuRef }) {
       </div>
 
       {/* Admin Info */}
-      <h2 className="text-lg font-semibold mt-2">{user?.name || "Unknown"}</h2>
-      <p className="text-gray-500 text-sm">{user?.email || "No email"}</p>
+      <input
+        type="text"
+        value={name}
+        onChange={handleInputChange(setName)}
+        onBlur={handleInputBlur}
+        className="text-lg font-semibold mt-2 text-center border-b border-gray-300 focus:outline-none"
+        disabled={loading}
+      />
+      <input
+        type="email"
+        value={email}
+        onChange={handleInputChange(setEmail)}
+        onBlur={handleInputBlur}
+        className="text-sm text-gray-500 text-center border-b border-gray-300 focus:outline-none mt-1"
+        disabled={loading}
+      />
+
       <div className="bg-orange-100 text-orange-700 mt-3 px-4 py-2 rounded-full text-sm">
         Role: <strong>{user?.role || "Administrator"}</strong>
       </div>
@@ -71,7 +122,7 @@ function AdminProfile({ menuRef }) {
       {/* Settings Button */}
       <button
         onClick={() => navigate("/adminsettings")}
-        className="mt-4 px-4 py-2 bg-black text-white rounded-lg text-sm hover:bg-orange-700 transition"
+        className="mt-4 px-4 py-2 bg-black text-white rounded-lg text-sm hover:bg-zinc-600 transition"
       >
         Settings
       </button>
@@ -79,7 +130,7 @@ function AdminProfile({ menuRef }) {
       {/* Logout Button */}
       <button
         onClick={handleLogout}
-        className="mt-3 px-4 py-2 bg-black text-white rounded-lg text-sm hover:bg-red-700 transition flex items-center gap-2"
+        className="mt-3 px-4 py-2 bg-black text-white rounded-lg text-sm hover:bg-zinc-600 transition flex items-center gap-2"
       >
         <FaSignOutAlt /> Logout
       </button>

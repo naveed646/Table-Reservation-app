@@ -1,10 +1,13 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import registerImg from "../../assets/registerImg.jpg";
-import { registerUser } from "../../api/auth"; // 👈 import API
+import { registerUser } from "../../api/auth";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 function Signup() {
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const {
     register,
@@ -19,7 +22,7 @@ function Signup() {
       alert(" Registration successful!");
       console.log("API Response:", response);
 
-      navigate("/login"); 
+      navigate("/login");
     } catch (error) {
       console.error("Error:", error);
       alert(` Registration failed: ${error.message || "Try again"}`);
@@ -35,9 +38,10 @@ function Signup() {
         <div className="text-black text-center max-w-xl bg-gradient-to-tr from-zinc-800 to-green-200 opacity-90 p-6 rounded">
           <h1 className="font-bold text-3xl mb-4">คเєςє ๏ภ קlคtє</h1>
           <p className="font-semibold">
-            At Piece on Plate, we believe food is more than just nourishment — it's an experience. 
-            Our restaurant blends comforting flavors with creative presentation, 
-            offering a curated menu of dishes crafted from fresh, locally sourced ingredients.
+            At Piece on Plate, we believe food is more than just nourishment —
+            it's an experience. Our restaurant blends comforting flavors with
+            creative presentation, offering a curated menu of dishes crafted
+            from fresh, locally sourced ingredients.
           </p>
         </div>
       </div>
@@ -55,7 +59,9 @@ function Signup() {
               {...register("name", { required: "Name is required" })}
             />
             {errors.name && (
-              <span className="text-red-400 text-sm">{errors.name.message}</span>
+              <span className="text-red-400 text-sm">
+                {errors.name.message}
+              </span>
             )}
           </div>
 
@@ -67,28 +73,44 @@ function Signup() {
               className="text-lg px-3 py-2 border-b border-gray-400 focus:outline-none text-black"
               {...register("email", {
                 required: "Email is required",
-                pattern: { value: /^\S+@\S+$/i, message: "Enter a valid email" },
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Enter a valid email",
+                },
               })}
             />
             {errors.email && (
-              <span className="text-red-400 text-sm">{errors.email.message}</span>
+              <span className="text-red-400 text-sm">
+                {errors.email.message}
+              </span>
             )}
           </div>
 
-          <div className="flex flex-col">
+          <div className="relative flex flex-col">
             <label className="text-base font-medium">Password</label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Enter your password..."
               className="text-lg px-3 py-2 border-b border-gray-400 focus:outline-none text-black"
               {...register("password", {
                 required: "Password is required",
-                minLength: { value: 6, message: "Password must be at least 6 characters" },
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
               })}
             />
             {errors.password && (
-              <span className="text-red-400 text-sm">{errors.password.message}</span>
+              <span className="text-red-400 text-sm">
+                {errors.password.message}
+              </span>
             )}
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-white"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
 
           <button

@@ -3,7 +3,7 @@ import React from "react";
 
 import Herocom from "../components/homepagecomp/Herocom";
 import MenuItems from "../components/homepagecomp/MenuItems";
-import About from "../components/homepagecomp/About";
+import About from "../pages/About";
 import TableAdd from "../components/homepagecomp/TableAdd";
 
 export default function HomePage() {

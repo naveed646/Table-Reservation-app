@@ -5,6 +5,7 @@ import loginImg from "../../assets/loginImg.jpg";
 import { loginUser } from "../../api/auth";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/auth/authSlice";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 function Login() {
   const {
@@ -16,6 +17,7 @@ function Login() {
   const dispatch = useDispatch();
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -32,6 +34,7 @@ function Login() {
             name: res.name,
             email: res.email,
             role: res.role,
+            profilePicture: res.profilePicture,
           })
         );
 
@@ -41,6 +44,7 @@ function Login() {
             name: res.name,
             email: res.email,
             role: res.role,
+            profilePicture: res.profilePicture,
           })
         );
 
@@ -103,10 +107,10 @@ function Login() {
             )}
           </div>
 
-          <div className="flex flex-col">
+          <div className=" relative flex flex-col">
             <label className="text-base font-medium">Password</label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Enter your password..."
               className="text-lg px-3 py-2 border-b border-gray-400 focus:outline-none text-black"
               {...register("password", {
@@ -122,6 +126,12 @@ function Login() {
                 {errors.password.message}
               </span>
             )}
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-white"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
 
           {serverError && (

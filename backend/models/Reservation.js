@@ -16,7 +16,7 @@ const reservationSchema = new mongoose.Schema(
       required: true,
     },
     date: {
-      type: String, // we keep string for simplicity (yyyy-mm-dd)
+      type: String, 
       required: true,
     },
     time: {
@@ -50,3 +50,5 @@ const reservationSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Reservation", reservationSchema);
+
+

@@ -30,6 +30,12 @@ const registerSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",          
     },
+    profilePicture: {
+      type: String,
+      default: "", // will store `/uploads/avatars/filename.png`
+    },
+    passwordChangedAt: 
+    { type: Date }, 
   },
   { timestamps: true }
 );
