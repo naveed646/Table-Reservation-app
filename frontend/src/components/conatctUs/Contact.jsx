@@ -1,84 +1,117 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { sendContactMessage } from "../../api/contact";
+import { useSelector } from "react-redux";
 
 export default function ContactUs() {
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("");
+  const info = useSelector((state)=> state.contactInfo.info)
+  if (!info) return <p className="text-center mt-10">Loading contact info...</p>;
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setStatus("");
+
+    try {
+      await sendContactMessage(formData);
+      setStatus("Your message has been sent successfully!");
+      setFormData({ name: "", email: "", message: "" });
+    } catch {
+      setStatus("Something went wrong. Try again.");
+    }
+    setLoading(false);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-orange-100 via-white to-orange-50 py-16 px-6">
-      {/* Heading */}
+    <div className="min-h-screen bg-white text-black py-16 px-6">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          Contact <span className="text-orange-500">Us</span>
+          Contact <span className="text-black">Us</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Have questions, feedback, or want to book a special dining experience?  
-          Get in touch with us we’d love to hear from you.
+          Have questions or feedback? We’d love to hear from you.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-        {/* Contact Information */}
+        {/* Contact Info */}
         <div className="space-y-6">
-          <div className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
-            <FaPhoneAlt className="text-orange-500 text-2xl" />
+          <div className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-md">
+            <FaPhoneAlt className="text-black text-2xl" />
             <div>
-              <h3 className="font-semibold text-gray-800">Call Us</h3>
-              <p className="text-gray-600">+92 300 1234567</p>
+              <h3 className="font-semibold">Call Us</h3>
+              <p>{info.phone}</p>
             </div>
           </div>
-
-          <div className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
-            <FaEnvelope className="text-orange-500 text-2xl" />
+          <div className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-md">
+            <FaEnvelope className="text-black text-2xl" />
             <div>
-              <h3 className="font-semibold text-gray-800">Email Us</h3>
-              <p className="text-gray-600">info@pieceonplate.com</p>
+              <h3 className="font-semibold">Email Us</h3>
+              <p>{info.email}</p>
             </div>
           </div>
-
-          <div className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
-            <FaMapMarkerAlt className="text-orange-500 text-2xl" />
+          <div className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-md">
+            <FaMapMarkerAlt className="text-black text-2xl" />
             <div>
-              <h3 className="font-semibold text-gray-800">Visit Us</h3>
-              <p className="text-gray-600">123 Food Street, Lahore, Pakistan</p>
+              <h3 className="font-semibold">Visit Us</h3>
+              <p>{info.location}</p>
             </div>
           </div>
-
-          <div className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
-            <FaClock className="text-orange-500 text-2xl" />
+          <div className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-md">
+            <FaClock className="text-black text-2xl" />
             <div>
-              <h3 className="font-semibold text-gray-800">Opening Hours</h3>
-              <p className="text-gray-600">Mon - Sun: 12:00 PM - 11:00 PM</p>
+              <h3 className="font-semibold">Opening Hours</h3>
+              <p>{info.openingHours}</p>
             </div>
           </div>
         </div>
 
         {/* Contact Form */}
-        <div className="bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            Send Us a Message
-          </h2>
-          <form className="space-y-4">
+        <div className="bg-white p-8 flex flex-col justify-center items-center rounded-2xl shadow-md">
+          <h2 className="text-2xl font-semibold mb-6">Send Us a Message</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="text"
+              name="name"
               placeholder="Your Name"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border rounded-lg"
             />
             <input
               type="email"
+              name="email"
               placeholder="Your Email"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border rounded-lg"
             />
             <textarea
+              name="message"
               placeholder="Your Message"
+              value={formData.message}
+              onChange={handleChange}
+              required
               rows="5"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-            ></textarea>
-            <button
-              type="submit"
-              className="w-full bg-orange-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-orange-600 transition-all duration-300"
-            >
-              Send Message
-            </button>
+              className="w-full p-3 border rounded-lg"
+            />
+            
           </form>
+          <button
+              type="submit"
+              disabled={loading}
+              className="w-30 bg-black text-white py-3 mt-5  rounded-lg hover:bg-zinc-600"
+            >
+              {loading ? "Sending..." : "Send Message"}
+            </button>
+          {status && <p className="mt-4 text-center">{status}</p>}
         </div>
       </div>
     </div>

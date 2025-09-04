@@ -6,6 +6,8 @@ const Connect_DB = require("./conifg/db");
 const authRoutes = require("./routes/authRoutes");
 const menuRoutes =require("./routes/menuRoutes")
 const reservationRoutes = require("./routes/reservationRoutes");
+const contactRoutes = require("./routes/contact")
+const contactInfoRoutes = require("./routes/contactInfoRoutes");
 
 dotenv.config();
 
@@ -25,9 +27,11 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/reservations", reservationRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/contact-info", contactInfoRoutes);
 
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-    Connect_DB();
+app.listen(PORT, async() => {
+   await Connect_DB();
     console.log(`Server running on http://localhost:${PORT}`);
 });

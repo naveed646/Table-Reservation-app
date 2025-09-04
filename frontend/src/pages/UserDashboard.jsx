@@ -59,7 +59,7 @@ export default function UserDashboard() {
     <div className="min-h-screen bg-white p-8">
       {/* Welcome Section */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-orange-700">
+        <h1 className="text-4xl font-bold text-black">
           Welcome, {username}!
         </h1>
         <p className="text-lg text-gray-600 mt-2">
@@ -70,7 +70,7 @@ export default function UserDashboard() {
       {/* Content Section */}
       <div className="max-w-3xl mx-auto bg-gray-50 p-6 rounded-2xl shadow-lg">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-          <FaUtensils className="text-orange-500" /> About Our Booking System
+          <FaUtensils className="text-black" /> About Our Booking System
         </h2>
         <p className="text-gray-600 mb-6">
           Our restaurant table booking system allows you to reserve your seat
@@ -81,15 +81,15 @@ export default function UserDashboard() {
         {/* Availability Info */}
         <div className="grid grid-cols-2 gap-6 text-center">
           {/* Available Tables */}
-          <div className="bg-green-100 p-4 rounded-lg shadow">
-            <FaChair className="text-green-600 text-3xl mx-auto mb-2" />
+          <div className="bg-gray-50 p-4 rounded-lg shadow">
+            <FaChair className="text-black text-3xl mx-auto mb-2" />
             <p className="text-xl font-bold">{availableTables}</p>
             <p className="text-gray-700">Tables Available</p>
           </div>
 
           {/* Active Reservations */}
-          <div className="bg-blue-100 p-4 rounded-lg shadow">
-            <FaCheckCircle className="text-blue-600 text-3xl mx-auto mb-2" />
+          <div className="bg-gray-50 p-4 rounded-lg shadow">
+            <FaCheckCircle className="text-black text-3xl mx-auto mb-2" />
             <p className="text-xl font-bold">{approvedReservations.length}</p>
             <p className="text-gray-700">Active Reservations</p>
           </div>

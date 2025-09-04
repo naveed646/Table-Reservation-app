@@ -60,7 +60,7 @@ export const admin = {
 // ============================
 // admin dashbaorad links
 // ============================
-import { FaTachometerAlt, FaClipboardList, FaUtensils } from "react-icons/fa";
+import { FaTachometerAlt, FaClipboardList, FaUtensils, FaEnvelope, FaPhone } from "react-icons/fa";
 import { BiFoodMenu } from "react-icons/bi";
 import { GiMeal } from "react-icons/gi";
 export const adminlinks = [
@@ -69,6 +69,8 @@ export const adminlinks = [
     { to: "/admintable", label: "Tables", icon: FaUtensils },
     { to: "/adminmenu", label: "Menu Management", icon: BiFoodMenu },
     { to: "/menulist", label: "Menu Items", icon: GiMeal },
+     { to: "/adminmessages", label: "Messages", icon: FaEnvelope },
+     { to: "/contactinfo", label: "Manage Contact", icon: FaPhone },
   ];
 
 
@@ -94,52 +96,52 @@ export const dashNavLinks = [
     label: "Reservations",
     icon: FaCalendarAlt,
   },
-  {
-    path: "/offer",
-    label: "Offers",
-    icon: FaGift,
-  },
+  // {
+  //   path: "/offer",
+  //   label: "Offers",
+  //   icon: FaGift,
+  // },
 ];
 
 // ============================
 // Menu Data
 // ============================
 
-import dish1 from "../assets/chickenkabab.jpg";
-import dish2 from "../assets/pasta.png";
-import dish3 from "../assets/steak.jpg";
-import dish4 from "../assets/salad.jpg";
+// import dish1 from "../assets/chickenkabab.jpg";
+// import dish2 from "../assets/pasta.png";
+// import dish3 from "../assets/steak.jpg";
+// import dish4 from "../assets/salad.jpg";
 
-export const menuItems = [
-  {
-    id: 1,
-    name: "Chicken Kabab",
-    description: "Spiced grilled chicken served with garlic sauce.",
-    price: "$12.99",
-    image: dish1,
-  },
-  {
-    id: 2,
-    name: "Creamy Alfredo Pasta",
-    description: "Rich Alfredo sauce over fettuccine and grilled chicken.",
-    price: "$10.49",
-    image: dish2,
-  },
-  {
-    id: 3,
-    name: "Grilled Steak",
-    description: "Juicy sirloin steak grilled to perfection with herbs.",
-    price: "$17.25",
-    image: dish3,
-  },
-  {
-    id: 4,
-    name: "Fresh Garden Salad",
-    description: "Crisp greens, cherry tomatoes, and vinaigrette.",
-    price: "$7.99",
-    image: dish4,
-  },
-];
+// export const menuItems = [
+//   {
+//     id: 1,
+//     name: "Chicken Kabab",
+//     description: "Spiced grilled chicken served with garlic sauce.",
+//     price: "$12.99",
+//     image: dish1,
+//   },
+//   {
+//     id: 2,
+//     name: "Creamy Alfredo Pasta",
+//     description: "Rich Alfredo sauce over fettuccine and grilled chicken.",
+//     price: "$10.49",
+//     image: dish2,
+//   },
+//   {
+//     id: 3,
+//     name: "Grilled Steak",
+//     description: "Juicy sirloin steak grilled to perfection with herbs.",
+//     price: "$17.25",
+//     image: dish3,
+//   },
+//   {
+//     id: 4,
+//     name: "Fresh Garden Salad",
+//     description: "Crisp greens, cherry tomatoes, and vinaigrette.",
+//     price: "$7.99",
+//     image: dish4,
+//   },
+// ];
 
 // ============================
 // Services Data

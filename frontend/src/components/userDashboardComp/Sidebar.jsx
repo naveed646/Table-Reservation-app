@@ -10,7 +10,7 @@ function Sidebar({ open, setOpen }) {
 
   return (
     <aside
-      className={`fixed sm:static top-0 left-0 h-full bg-gray-50 text-black 
+      className={`fixed sm:static top-0 left-0 h-full z-20 bg-gray-50 text-black 
       transition-transform duration-300 shadow-md p-4
       ${open ? "translate-x-0" : "-translate-x-full"} 
       sm:translate-x-0 ${collapsed ? "w-18" : "w-60"}`}
@@ -31,7 +31,7 @@ function Sidebar({ open, setOpen }) {
       {/* for mobile.... */}
       <button
         onClick={() => setOpen(false)}
-        className="sm:hidden absolute right-3 top-3  text-black text-2xl"
+        className="sm:hidden absolute right-3 top-3 text-black text-2xl"
       >
         <TiDeleteOutline className="text-black" />
       </button>
@@ -45,7 +45,7 @@ function Sidebar({ open, setOpen }) {
 
       {/* Navigation */}
       
-     <nav className="space-y-2 mt-5">
+     <nav className="space-y-2  mt-5">
       {dashNavLinks.map((link) => (
         <NavLink
           key={link.path}

@@ -14,8 +14,8 @@ export default function Ratings() {
   }, []);
 
   return (
-    <div className="py-12 px-6 text-center bg-gradient-to-tr from-orange-50 via-white to-orange-100 mt-12">
-      <h2 className="text-3xl font-bold mb-6 text-orange-800">Customer Ratings</h2>
+    <div className="py-12 px-6 text-center border-t border-b border-gray-800 bg-white text-black mt-12">
+      <h2 className="text-3xl font-bold mb-6 text-black">Customer Ratings</h2>
       <div className="flex items-center justify-center space-x-2 mb-3">
         {[...Array(5)].map((_, i) => (
           <FaStar

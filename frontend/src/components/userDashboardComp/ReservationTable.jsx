@@ -100,7 +100,7 @@ function ReservationTable() {
                     />
                     <button
                       onClick={handleSave}
-                      className="px-2 py-1 bg-green-500 text-white rounded"
+                      className="px-2 py-1 bg-black hover:bg-zinc-600 text-white rounded"
                     >
                       Save
                     </button>
@@ -109,7 +109,7 @@ function ReservationTable() {
                   <div className="flex items-center justify-center gap-2">
                     {res.guests}
                     <FaEdit
-                      className="text-blue-500 cursor-pointer"
+                      className="text-black  cursor-pointer"
                       onClick={() =>
                         setEditing({
                           id: res._id,
@@ -138,7 +138,7 @@ function ReservationTable() {
                     />
                     <button
                       onClick={handleSave}
-                      className="px-2 py-1 bg-green-500 text-white rounded"
+                      className="px-2 py-1 bg-black hover:bg-zinc-600 text-white rounded"
                     >
                       Save
                     </button>
@@ -147,7 +147,7 @@ function ReservationTable() {
                   <div className="flex items-center justify-center gap-2">
                     {res.duration}
                     <FaEdit
-                      className="text-blue-500 cursor-pointer"
+                      className="text-black cursor-pointer"
                       onClick={() =>
                         setEditing({
                           id: res._id,

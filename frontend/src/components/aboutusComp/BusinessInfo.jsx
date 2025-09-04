@@ -1,23 +1,30 @@
 import {FaClock, FaMapMarkerAlt, FaPhone} from "react-icons/fa";
+import { useSelector } from "react-redux";
+
 
 // Business Info
 export default function BusinessInfo() {
+  const info = useSelector ((state)=> state.contactInfo.info)
+
+  if (!info) {
+    return <p>Loading business info...</p>; // or skeleton UI
+  }
   return (
-    <div className="bg-gradient-to-r from-orange-50 to-white py-10 px-6 grid md:grid-cols-3 gap-6 text-center shadow-md">
+    <div className="bg-gray-50 mt-4 mb-4 rounded-2xl w-[80%] mx-auto border-gray-800 py-10 px-6 grid md:grid-cols-3 gap-6 text-center shadow-md">
       <div>
-        <FaClock className="mx-auto text-4xl text-orange-500 mb-3" />
+        <FaClock className="mx-auto text-4xl text-black mb-3" />
         <h3 className="font-bold text-lg">Opening Hours</h3>
-        <p className="text-gray-600">Mon – Sun: 11:00 AM – 11:00 PM</p>
+        <p className="text-gray-600">{info.openingHours}</p>
       </div>
       <div>
-        <FaMapMarkerAlt className="mx-auto text-4xl text-green-500 mb-3" />
+        <FaMapMarkerAlt className="mx-auto text-4xl text-black mb-3" />
         <h3 className="font-bold text-lg">Our Location</h3>
-        <p className="text-gray-600">123 Main Street, Karachi</p>
+        <p className="text-gray-600">{info.location}</p>
       </div>
       <div>
-        <FaPhone className="mx-auto text-4xl text-blue-500 mb-3" />
+        <FaPhone className="mx-auto text-4xl text-black mb-3" />
         <h3 className="font-bold text-lg">Contact Us</h3>
-        <p className="text-gray-600">+92 300 1234567</p>
+        <p className="text-gray-600">{info.phone}</p>
       </div>
     </div>
   );

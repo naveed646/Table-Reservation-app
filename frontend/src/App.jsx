@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import AboutUs from "./pages/About";
-import ExploreMenu from "./pages/ExploreMenu";
+// import ExploreMenu from "./pages/ExploreMenu";
 import UserDashboard from "./pages/UserDashboard";
 import UserDashBoardLayout from "./components/userDashboardComp/userDashBoardLayout";
 import ReservationTable from "./components/userDashboardComp/ReservationTable";
@@ -27,9 +27,21 @@ import AdminMenu from "./components/adminDashboard/AdminMenu";
 import MenuList from "./components/adminDashboard/adminMenuCode/MenuList";
 import MenuItems from "./components/homepagecomp/MenuItems";
 import MenuItemDetail from "./components/homepagecomp/MenuItemDetail";
+import Messages from "./components/adminDashboard/Messages";
+import ContactInfo from "./components/adminDashboard/ContactInfo";
+import { useDispatch } from "react-redux";
+import { getContactInfo } from "./redux/contactInfo/contactInfoSlice";
+import { useEffect } from "react";
 
 
 function App() {
+    const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getContactInfo());
+  }, [dispatch]);
+
+  
   const router = createBrowserRouter([
     {
       path: "/register",
@@ -52,10 +64,10 @@ function App() {
           path: "/about",
           element: <AboutUs />,
         },
-        {
-          path: "/explore",
-          element: <ExploreMenu />,
-        },
+        // {
+        //   path: "/explore",
+        //   element: <ExploreMenu />,
+        // },
         {
           path: "/services",
           element: <Services />,
@@ -115,6 +127,8 @@ function App() {
         { path: "adminsettings", element: <AdminSettings /> },
         { path: "adminmenu", element: <AdminMenu /> },
         { path: "/menulist", element: <MenuList /> }, 
+        { path: "/adminmessages", element: <Messages /> }, 
+        { path: "/contactinfo", element: <ContactInfo /> }, 
       ],
     },
   ],

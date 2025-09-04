@@ -26,7 +26,7 @@ function MenuItems() {
   if (error) return <p className="text-center py-10 text-red-500">{error}</p>;
 
   return (
-    <section className="py-16 px-6 bg-white text-center">
+    <section className="py-16 px-6 border-t border-b  border-gray-800 bg-white text-center">
       <h2 className="text-3xl font-bold mb-4">Customer Favorites</h2>
       <p className="text-gray-600 mb-10">
         A taste of what keeps our guests coming back for more

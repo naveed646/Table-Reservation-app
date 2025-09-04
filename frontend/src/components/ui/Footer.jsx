@@ -1,15 +1,20 @@
 import { FaFacebookF, FaInstagram, FaTwitter, FaLocationArrow, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import {data} from "./data/navIte.json"
+import {data} from "./data/navIte.json";
+import {useSelector} from "react-redux";
 
 export default function Footer() {
+  const info = useSelector((state)=> state.contactInfo.info)
+  if (!info) {
+    return <p>Loading business info...</p>; // or skeleton UI
+  }
   return (
-    <footer className="bg-zinc-800 text-white py-10">
+    <footer className="bg-white border-t border-gray-800 text-black py-10">
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         {/* Brand */}
         <div>
           <h2 className="text-2xl font-bold mb-4">קเєςє ๏ภ קlคtє</h2>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-black">
             Delight in every bite. Premium quality food made with passion and love.
           </p>
         </div>
@@ -17,9 +22,9 @@ export default function Footer() {
         {/* Navigation */}
         <div>
           <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
-          <ul className="space-y-2 text-gray-400 text-sm">
+          <ul className="space-y-2 text-black text-sm">
             { data.navbarLinks.map((item)=>(
-              <li className="hover:text-white" key={item.id}>
+              <li className="hover:text-zinc-500" key={item.id}>
                 <NavLink to={item.link}>
                   {item.title}
                 </NavLink>
@@ -34,15 +39,15 @@ export default function Footer() {
         {/* Contact */}
         <div>
           <h3 className="text-lg font-semibold mb-3">Contact Us</h3>
-          <ul className="space-y-2 text-gray-400 text-sm">
+          <ul className="space-y-2 text-black text-sm">
             <li className="flex items-center gap-2">
-              <FaLocationArrow /> 123 Food Street, Flavor Town
+              <FaLocationArrow /> {info.location}
             </li>
             <li className="flex items-center gap-2">
-              <FaPhoneAlt /> +1 234 567 890
+              <FaPhoneAlt /> {info.phone}
             </li>
             <li className="flex items-center gap-2">
-              <FaEnvelope /> hello@tastybites.com
+              <FaEnvelope /> {info.email}
             </li>
           </ul>
         </div>
@@ -50,10 +55,10 @@ export default function Footer() {
         {/* Social */}
         <div>
           <h3 className="text-lg font-semibold mb-3">Follow Us</h3>
-          <div className="flex gap-4 text-gray-400">
-            <NavLink to="#" className="hover:text-white text-xl"><FaFacebookF /></NavLink>
-            <NavLink to="#" className="hover:text-white text-xl"><FaInstagram /></NavLink>
-            <NavLink to="#" className="hover:text-white text-xl"><FaTwitter /></NavLink>
+          <div className="flex gap-4 text-black">
+            <NavLink to="#" className="hover:text-zinc-600 text-xl"><FaFacebookF /></NavLink>
+            <NavLink to="#" className="hover:text-zinc-600 text-xl"><FaInstagram /></NavLink>
+            <NavLink to="#" className="hover:text-zinc-600 text-xl"><FaTwitter /></NavLink>
           </div>
         </div>
       </div>

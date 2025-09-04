@@ -1,11 +1,11 @@
-import Menu from '../components/exploreMenuComp/Menu';
+// import Menu from '../components/exploreMenuComp/Menu';
 
-const ExploreMenu = () => {
-  return (
-    <div className="min-h-screen bg-white text-gray-800">
-      <Menu/>
-    </div>
-  );
-};
+// const ExploreMenu = () => {
+//   return (
+//     <div className="min-h-screen bg-white text-gray-800">
+//       <Menu/>
+//     </div>
+//   );
+// };
 
-export default ExploreMenu;
+// export default ExploreMenu;

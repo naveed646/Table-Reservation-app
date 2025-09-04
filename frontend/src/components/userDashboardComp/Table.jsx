@@ -101,7 +101,7 @@ export default function Table() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white">
+    <div className="min-h-screen w-full  bg-white">
       <header className="max-w-6xl text-black mx-auto px-4 pt-3 pb-3">
         <h1 className="text-3xl md:text-4xl text-center font-semibold tracking-tight">
           Reserve Your Table
