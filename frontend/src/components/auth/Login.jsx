@@ -6,6 +6,7 @@ import { loginUser } from "../../api/auth";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/auth/authSlice";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 function Login() {
   const {
@@ -24,7 +25,11 @@ function Login() {
     setServerError("");
     try {
       const res = await loginUser(data);
-
+            Swal.fire({
+        title: "Login success",
+        icon: "success",
+        draggable: true,
+      });
       if (res.token) {
         localStorage.setItem("token", res.token);
         localStorage.setItem(
@@ -47,14 +52,20 @@ function Login() {
             profilePicture: res.profilePicture,
           })
         );
+      
 
         if (res.role === "admin") {
           navigate("/adminDashboard");
-        } else {
-          navigate("/dashboard");
+        } else {  
+        navigate("/dashboard");
         }
       }
     } catch (err) {
+            Swal.fire({
+        title: "Login failed...",
+        icon: "error",
+        draggable: false,
+      });
       console.error("Login Error:", err);
       setServerError(err.response?.data?.message || "Login failed");
     } finally {
@@ -70,7 +81,9 @@ function Login() {
         style={{ backgroundImage: `url(${loginImg})` }}
       >
         <div className="text-black text-center max-w-xl bg-gray-200 opacity-90 p-4 sm:p-6 rounded">
-          <h1 className="font-bold text-2xl sm:text-3xl mb-4">קเєςє ๏ภ קlคtє</h1>
+          <h1 className="font-bold text-2xl sm:text-3xl mb-4">
+            קเєςє ๏ภ קlคtє
+          </h1>
           <p className="font-medium text-sm sm:text-base">
             At Piece on Plate, we believe food is more than just nourishment —
             it's an experience. Our restaurant blends comforting flavors with
@@ -89,7 +102,10 @@ function Login() {
             Login
           </h1>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
             <div className="flex flex-col">
               <label className="text-base font-medium">Email</label>
               <input
@@ -156,10 +172,9 @@ function Login() {
               >
                 SignUp
               </NavLink>
-            </p> 
-                
+            </p>
           </form>
-        </div>    
+        </div>
       </div>
     </div>
   );

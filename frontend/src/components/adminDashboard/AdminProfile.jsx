@@ -3,7 +3,8 @@ import { FaUserCircle, FaCamera, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout, setUser } from "../../redux/auth/authSlice";
-import { uploadAvatar, updateProfile } from "../../api/auth"; 
+import { uploadAvatar, updateProfile } from "../../api/auth";
+import Swal from "sweetalert2";
 
 function AdminProfile({ menuRef }) {
   const navigate = useNavigate();
@@ -64,9 +65,15 @@ function AdminProfile({ menuRef }) {
 
   // Logout
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("user");
+    Swal.fire({
+      title: "Logout...",
+      icon: "success",
+      draggable: true,
+    });
     dispatch(logout());
+
     navigate("/");
   };
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import { sendContactMessage } from "../../api/contact";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -19,10 +20,20 @@ export default function ContactUs() {
 
     try {
       await sendContactMessage(formData);
-      setStatus("Your message has been sent successfully!");
+        Swal.fire({
+              title: "Your message has been sent successfully!",
+              icon: "success",
+              draggable: true,
+            });
+      // setStatus("Your message has been sent successfully!");
       setFormData({ name: "", email: "", message: "" });
     } catch {
-      setStatus("Something went wrong. Try again.");
+      Swal.fire({
+              title: "Something went wrong. Try again.",
+              icon: "error",
+              draggable: true,
+            });
+      // setStatus("Something went wrong. Try again.");
     }
     setLoading(false);
   };
@@ -102,15 +113,15 @@ export default function ContactUs() {
               rows="5"
               className="w-full p-3 border rounded-lg"
             />
-            
-          </form>
-          <button
+             <button
               type="submit"
               disabled={loading}
-              className="w-30 bg-black text-white py-3 mt-5  rounded-lg hover:bg-zinc-600"
+              className=" flex  justify-center w-[30%] mx-auto bg-black text-white py-3 mt-5  rounded-lg hover:bg-zinc-600"
             >
               {loading ? "Sending..." : "Send Message"}
             </button>
+          </form>
+         
           {status && <p className="mt-4 text-center">{status}</p>}
         </div>
       </div>

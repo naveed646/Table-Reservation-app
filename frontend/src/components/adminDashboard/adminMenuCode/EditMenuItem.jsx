@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { updateMenu } from "../../../api/menu";
+import Swal from "sweetalert2";
 
 function EditMenuItem({ item, onClose, onUpdate }) {
   const [form, setForm] = useState({ title: "", description: "", price: "", imageUrl: null });
@@ -25,9 +26,19 @@ function EditMenuItem({ item, onClose, onUpdate }) {
 
     try {
       await updateMenu(item._id, formData);
+         Swal.fire({
+              title: "Item saved successfully.",
+              icon: "success",
+              draggable: false,
+            });
       onUpdate(); // refresh menu list
       onClose();
     } catch (err) {
+         Swal.fire({
+              title: "Failed to update:",
+              icon: "error",
+              draggable: false,
+            });
       console.error("Failed to update:", err);
     }
   };

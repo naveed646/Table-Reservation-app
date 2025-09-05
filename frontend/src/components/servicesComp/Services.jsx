@@ -7,11 +7,11 @@ export default function Services() {
       {/* Heading */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          Our <span className="text-orange-500">Services</span>
+          Our <span className="text-black">Services</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
           At{" "}
-          <span className="font-semibold text-orange-500">Piece on Plate</span>,
+          <span className="font-semibold text-black">Piece on Plate</span>,
           we blend taste, comfort, and elegance to serve you beyond
           expectations. Here’s what makes dining with us special.
         </p>

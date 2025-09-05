@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import registerImg from "../../assets/registerImg.jpg";
 import { registerUser } from "../../api/auth";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,13 +19,21 @@ function Signup() {
     try {
       console.log("Form Data:", data);
       const response = await registerUser(data);
-      alert(" Registration successful!");
+         Swal.fire({
+             title: "Registration successful!",
+             icon: "success",
+             draggable: true,
+           }); 
       console.log("API Response:", response);
 
       navigate("/login");
     } catch (error) {
       console.error("Error:", error);
-      alert(` Registration failed: ${error.message || "Try again"}`);
+      Swal.fire({
+             title:` Registration failed: ${error.message || "Try again"}`,
+             icon: "error",
+             draggable: true,
+           });
     }
   };
 

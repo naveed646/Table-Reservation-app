@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import UserProfile from "./UserProfile";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/auth/authSlice";
+import Swal from "sweetalert2";
 
 function HeaderAndProfile({ toggleSidebar }) {
   const [showProfile, setShowProfile] = useState(false);
@@ -29,6 +30,11 @@ function HeaderAndProfile({ toggleSidebar }) {
 
   const handleLogout = () => {
     dsipatch(logout());
+        Swal.fire({
+            title: "Logout...",
+            icon: "success",
+            draggable: true,
+          });
     navigate("/");
   };
 

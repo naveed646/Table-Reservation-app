@@ -9,7 +9,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="lg:w-[80%] md:w-[full] mx-auto border-b rounded-xl mt-2 mb-2 shadow-amber-50 border-gray-500  bg-gray-50 text-black">
+    <div className="lg:w-[80%] md:w-[full] mx-auto border-b rounded-xl mt-2 mb-2 shadow-amber-50 border-gray-500  bg-gray-100 text-black">
       <nav className="max-w-6xl   px-4 py-2 flex items-center justify-between">
         {/* logoo.... */}
         <div className="flex items-center gap-2">
@@ -92,7 +92,7 @@ function Navbar() {
                 navigate("/register");
                 setMenuOpen(false);
               }}
-              className="w-full px-4 py-2  text-white bg-black rounded"
+              className="w-full px-4 py-2  text-white bg-black rounded  hover:bg-zinc-600"
             >
               Sign up
             </button>
@@ -100,7 +100,7 @@ function Navbar() {
                 navigate("/login");
                 setMenuOpen(false);
               }}
-            className="w-full px-4 py-2 bg-black text-white rounded hover:bg-orange-600 transition">
+            className="w-full px-4 py-2 bg-black text-white rounded hover:bg-zinc-600 ">
               Login
             </button>
           </div>

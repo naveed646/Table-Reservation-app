@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getMenu, deleteMenu } from "../../../api/menu";
 import EditMenuItem from "./EditMenuItem";
 import { FaTrash, FaEdit } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 function MenuList() {
   const [menu, setMenu] = useState([]);
@@ -28,7 +29,18 @@ function MenuList() {
   }, [page, search]);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+       const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "You want to delete this item?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "Cancel",
+  });
+
+  if (!result.isConfirmed) return;
     try {
       await deleteMenu(id);
       fetchMenuItems();

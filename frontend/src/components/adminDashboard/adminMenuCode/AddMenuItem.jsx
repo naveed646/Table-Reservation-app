@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { addMenu } from "../../../api/menu";
+import Swal from "sweetalert2";
 
 function AddMenuItem() {
   const [form, setForm] = useState({
@@ -20,10 +21,20 @@ function AddMenuItem() {
       if (form.imageUrl) formData.append("image", form.imageUrl);
 
       await addMenu(formData);
+      Swal.fire({
+             title:"Menu item added successfully!",
+             icon: "success",
+             draggable: true,
+           });
       setMessage("Menu item added successfully!");
       setForm({ title: "", description: "", price: "", imageUrl: null });
       
     } catch (err) {
+       Swal.fire({
+             title:"Failed to add menu item.",
+             icon: "error",
+             draggable: true,
+           });
       setMessage("Failed to add menu item.");
       console.error(err);
     }
