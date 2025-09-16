@@ -22,7 +22,6 @@ const ProtectedRoute = ({ role }) => {
     // Check role
     if (role && decoded.role !== role) return <Navigate to="/" replace />;
 
-    // ✅ Important: render nested routes via <Outlet />
     return <Outlet />;
   } catch (err) {
     console.error("Token decode error:", err);

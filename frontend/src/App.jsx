@@ -113,7 +113,7 @@ function App() {
 // Admin Layout with ProtectedRoute outside
 {
   path: "/",
-  element: <ProtectedRoute role="admin" />, // protect once
+  element: <ProtectedRoute role="admin" />, 
   children: [
     {
       path: "",
