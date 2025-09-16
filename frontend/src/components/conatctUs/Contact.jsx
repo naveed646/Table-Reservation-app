@@ -116,7 +116,7 @@ export default function ContactUs() {
              <button
               type="submit"
               disabled={loading}
-              className=" flex  justify-center w-[30%] mx-auto bg-black text-white py-3 mt-5  rounded-lg hover:bg-zinc-600"
+              className=" flex  justify-center w-[30%] mx-auto cursor-pointer bg-black text-white py-3 mt-5  rounded-lg hover:bg-zinc-600"
             >
               {loading ? "Sending..." : "Send Message"}
             </button>

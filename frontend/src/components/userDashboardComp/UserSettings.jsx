@@ -177,10 +177,10 @@ function Settings() {
               placeholder="Required to change password"
               autoComplete="new-password"
             />
-            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
-            onClick={()=> setShowCurrent(!showCurrent)}
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+              onClick={() => setShowCurrent(!showCurrent)}
             >
-
               {showCurrent ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
@@ -189,19 +189,19 @@ function Settings() {
           <div className="relative">
             <label className="block text-sm font-medium">New Password</label>
             <input
-              type={showNew ? "text" :"password"}
+              type={showNew ? "text" : "password"}
               name="password"
               placeholder="Leave blank to keep unchanged"
               value={formData.password}
               onChange={handleChange}
               className="w-full border p-2 rounded-lg"
             />
-             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
-             onClick={()=> setShowNew(!showNew)}
-             >
-              {showNew ?<FaEyeSlash/> : <FaEye/>}
-
-             </span>
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+              onClick={() => setShowNew(!showNew)}
+            >
+              {showNew ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
 
           {/* Confirm Password */}
@@ -210,20 +210,18 @@ function Settings() {
               Confirm Password
             </label>
             <input
-              type={showConfirm ? "text": "password"}
+              type={showConfirm ? "text" : "password"}
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
               className="w-full border p-2 rounded-lg"
             />
-             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
-             onClick={()=> setShowConfirm(!showConfirm)}
-             >
-              {showConfirm ? <FaEyeSlash/> : <FaEye/>}
-
-
-             </span>
-            
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+              onClick={() => setShowConfirm(!showConfirm)}
+            >
+              {showConfirm ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
 
           <button

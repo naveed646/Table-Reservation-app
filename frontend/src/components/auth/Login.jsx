@@ -131,7 +131,7 @@ function Login() {
               <label className="text-base font-medium">Password</label>
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your password..."
+                placeholder="********"
                 className="text-lg px-3 py-2 border-b border-gray-400 focus:outline-none text-black"
                 {...register("password", {
                   required: "Password is required",

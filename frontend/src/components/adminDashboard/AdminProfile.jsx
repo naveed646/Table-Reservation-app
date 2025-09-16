@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { FaUserCircle, FaCamera, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,6 +10,12 @@ function AdminProfile({ menuRef }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+
+
+
+  useEffect(()=> {
+      dispatch(uploadAvatar);
+  },[])
 
   const [previewImage, setPreviewImage] = useState(
     user?.profilePicture ? `http://localhost:8000${user.profilePicture}` : null
@@ -88,12 +94,12 @@ function AdminProfile({ menuRef }) {
           <img
             src={previewImage}
             alt="Profile"
-            className="w-20 h-20 rounded-full object-cover border-2 border-orange-500"
+            className="w-20 h-20 rounded-full object-cover border border-black"
           />
         ) : (
-          <FaUserCircle className="text-6xl text-orange-600" />
+          <FaUserCircle className="text-6xl text-black" />
         )}
-        <label className="absolute bottom-0 right-0 bg-orange-500 p-2 rounded-full cursor-pointer">
+        <label className="absolute bottom-0 right-0 bg-black p-2 rounded-full cursor-pointer">
           <FaCamera className="text-white text-sm" />
           <input
             type="file"
@@ -122,14 +128,14 @@ function AdminProfile({ menuRef }) {
         disabled={loading}
       />
 
-      <div className="bg-orange-100 text-orange-700 mt-3 px-4 py-2 rounded-full text-sm">
+      <div className=" text-black mt-3 px-4 py-2 rounded-full text-sm">
         Role: <strong>{user?.role || "Administrator"}</strong>
       </div>
 
       {/* Settings Button */}
       <button
         onClick={() => navigate("/adminsettings")}
-        className="mt-4 px-4 py-2 bg-black text-white rounded-lg text-sm hover:bg-zinc-600 transition"
+        className="mt-4 px-4 py-2 bg-black cursor-pointer text-white rounded-lg text-sm hover:bg-zinc-600 transition"
       >
         Settings
       </button>
@@ -137,7 +143,7 @@ function AdminProfile({ menuRef }) {
       {/* Logout Button */}
       <button
         onClick={handleLogout}
-        className="mt-3 px-4 py-2 bg-black text-white rounded-lg text-sm hover:bg-zinc-600 transition flex items-center gap-2"
+        className="mt-3 px-4 py-2 bg-black text-white cursor-pointer rounded-lg text-sm hover:bg-zinc-600 transition flex items-center gap-2"
       >
         <FaSignOutAlt /> Logout
       </button>

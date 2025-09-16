@@ -16,7 +16,7 @@ export default function AdminReservationTable() {
   const itemsPerPage = 5;
   const token = localStorage.getItem("token");
 
-  // ✅ Fetch reservations from backend
+  // Fetch reservations from backend
   useEffect(() => {
     const fetchReservations = async () => {
       try {
@@ -32,7 +32,7 @@ export default function AdminReservationTable() {
     fetchReservations();
   }, [token]);
 
-  // ✅ Sorting
+  // Sorting
   const handleSort = (key) => {
     setSortConfig((prev) =>
       prev.key === key
@@ -41,7 +41,7 @@ export default function AdminReservationTable() {
     );
   };
 
-  // ✅ Filtering + searching + sorting
+  //Filtering + searching + sorting
   const filteredReservations = useMemo(() => {
     let data = [...reservations];
 
@@ -75,7 +75,7 @@ export default function AdminReservationTable() {
     return data;
   }, [reservations, searchTerm, filterStatus, sortConfig]);
 
-  // ✅ Pagination
+  // Pagination
   const totalPages = Math.ceil(filteredReservations.length / itemsPerPage);
   const paginatedReservations = filteredReservations.slice(
     (currentPage - 1) * itemsPerPage,
@@ -158,7 +158,7 @@ export default function AdminReservationTable() {
                         ? "bg-green-100 text-green-700"
                         : res.status === "pending"
                         ? "bg-yellow-100 text-yellow-700"
-                        : "bg-red-100 text-red-700"
+                        : "bg-blue-100 text-blue-500"
                     }`}
                   >
                     {res.status}

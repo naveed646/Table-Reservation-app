@@ -31,7 +31,7 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/contact-info", contactInfoRoutes);
 
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, async() => {
-   await Connect_DB();
+app.listen(PORT,() => {
+   Connect_DB();
     console.log(`Server running on http://localhost:${PORT}`);
 });

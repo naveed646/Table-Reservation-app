@@ -9,3 +9,6 @@ export const sendContactMessage = (data) => API.post("/contact", data);
 
 // Fetch all messages (admin)
 export const fetchContactMessages = () => API.get("/contact");
+export const clearAllMessages = () => API.delete("/contact/clear");
+export const deleteMessage = (id) => API.delete(`/contact/${id}`);
+

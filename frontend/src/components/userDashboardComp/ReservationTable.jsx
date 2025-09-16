@@ -100,7 +100,7 @@ function ReservationTable() {
                     />
                     <button
                       onClick={handleSave}
-                      className="px-2 py-1 bg-black hover:bg-zinc-600 text-white rounded"
+                      className="px-2 py-1 bg-black cursor-pointer hover:bg-zinc-600 text-white rounded"
                     >
                       Save
                     </button>

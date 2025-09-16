@@ -165,11 +165,11 @@ function AdminSettings() {
               value={formData.currentPassword}
               onChange={handleChange}
               className="w-full border p-2 rounded-lg pr-10"
-              placeholder="Required to change password"
+              placeholder="********"
               autoComplete="new-password"
             />
             <span
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+              className="absolute right-3 top-10 transform -translate-y-1/2 cursor-pointer text-gray-500"
               onClick={() => setShowCurrent(!showCurrent)}
             >
               {showCurrent ? <FaEyeSlash /> : <FaEye />}
@@ -185,11 +185,11 @@ function AdminSettings() {
               value={formData.password}
               onChange={handleChange}
               className="w-full border p-2 rounded-lg pr-10"
-              placeholder="Leave blank to keep unchanged"
+              placeholder="********"
               autoComplete="new-password"
             />
             <span
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+              className="absolute right-3 top-10 transform -translate-y-1/2 cursor-pointer text-gray-500"
               onClick={() => setShowNew(!showNew)}
             >
               {showNew ? <FaEyeSlash /> : <FaEye />}
@@ -206,11 +206,12 @@ function AdminSettings() {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
+              placeholder="********"
               className="w-full border p-2 rounded-lg pr-10"
               autoComplete="new-password"
             />
             <span
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+              className="absolute right-3 top-10 transform -translate-y-1/2 cursor-pointer text-gray-500"
               onClick={() => setShowConfirm(!showConfirm)}
             >
               {showConfirm ? <FaEyeSlash /> : <FaEye />}
@@ -220,7 +221,7 @@ function AdminSettings() {
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-black text-white rounded-lg hover:bg-zinc-600 disabled:opacity-50"
+            className="px-6 py-2 bg-black cursor-pointer text-white rounded-lg hover:bg-zinc-600 disabled:opacity-50"
           >
             {loading ? "Saving..." : "Save Changes"}
           </button>
