@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const {
     register,
@@ -16,24 +17,32 @@ function Signup() {
   } = useForm();
 
   const onSubmit = async (data) => {
+    if (isSubmitting) return; // prevent double calls
+    setIsSubmitting(true);
+
     try {
       console.log("Form Data:", data);
-      const response = await registerUser(data);
-         Swal.fire({
-             title: "Registration successful!",
-             icon: "success",
-             draggable: true,
-           }); 
-      console.log("API Response:", response);
 
-      navigate("/login");
+      // backend call for OTP
+      await registerUser(data);
+
+      Swal.fire({
+        title: "OTP sent to your email!",
+        icon: "success",
+        draggable: true,
+      });
+
+      // navigate to OTP verification, passing email
+      navigate("/verify-otp", { state: { email: data.email } });
     } catch (error) {
       console.error("Error:", error);
       Swal.fire({
-             title:` Registration failed: ${error.message || "Try again"}`,
-             icon: "error",
-             draggable: true,
-           });
+        title: `Registration failed: ${error.message || "Try again"}`,
+        icon: "error",
+        draggable: true,
+      });
+
+      setIsSubmitting(false); // re-enable if error
     }
   };
 
@@ -45,7 +54,9 @@ function Signup() {
         style={{ backgroundImage: `url(${registerImg})` }}
       >
         <div className="text-black text-center max-w-xl bg-gray-200 opacity-90 p-4 sm:p-6 rounded">
-          <h1 className="font-bold text-2xl sm:text-3xl mb-4">קเєςє ๏ภ קlคtє</h1>
+          <h1 className="font-bold text-2xl sm:text-3xl mb-4">
+            קเєςє ๏ภ קlคtє
+          </h1>
           <p className="font-medium text-sm sm:text-base">
             At Piece on Plate, we believe food is more than just nourishment —
             it's an experience. Our restaurant blends comforting flavors with
@@ -62,7 +73,10 @@ function Signup() {
             Sign Up
           </h1>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
             <div className="flex flex-col">
               <label className="text-base font-medium">Name</label>
               <input
@@ -128,9 +142,15 @@ function Signup() {
 
             <button
               type="submit"
-              className="bg-black cursor-pointer text-white font-semibold py-3 rounded-xl hover:bg-zinc-600 transition w-[30%] mx-auto"
+              disabled={isSubmitting}
+              className={`bg-black text-white font-semibold py-3 rounded-xl transition w-[30%] mx-auto 
+          ${
+            isSubmitting
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:bg-zinc-600 cursor-pointer"
+          }`}
             >
-              Sign Up
+              {isSubmitting ? "Processing..." : "Sign Up"}
             </button>
 
             <p className="text-sm text-center mt-2">

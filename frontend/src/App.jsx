@@ -32,6 +32,9 @@ import ContactInfo from "./components/adminDashboard/ContactInfo";
 import { useDispatch } from "react-redux";
 import { getContactInfo } from "./redux/contactInfo/contactInfoSlice";
 import { useEffect } from "react";
+import VerifyOtp from "./components/auth/VerifyOtp";
+import ForgotPassword from "./components/auth/ForgotPassword";
+import ResetPassword from "./components/auth/ResetPassword";
 
 
 function App() {
@@ -50,6 +53,22 @@ function App() {
     {
       path: "/login",
       element: <LoginPage />,
+    },
+    {
+      path: "/verify-otp",
+      element: <VerifyOtp />,
+    },
+    {
+      path: "/login",
+      element: <LoginPage />,
+    },
+    {
+      path: "/forgot-password",
+      element: <ForgotPassword/>,
+    },
+    {
+      path: "/reset-password",
+      element: <ResetPassword/>,
     },
 
     {

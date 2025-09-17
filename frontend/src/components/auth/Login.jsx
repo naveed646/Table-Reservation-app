@@ -25,7 +25,7 @@ function Login() {
     setServerError("");
     try {
       const res = await loginUser(data);
-            Swal.fire({
+      Swal.fire({
         title: "Login success",
         icon: "success",
         draggable: true,
@@ -52,16 +52,15 @@ function Login() {
             profilePicture: res.profilePicture,
           })
         );
-      
 
         if (res.role === "admin") {
           navigate("/adminDashboard");
-        } else {  
-        navigate("/dashboard");
+        } else {
+          navigate("/dashboard");
         }
       }
     } catch (err) {
-            Swal.fire({
+      Swal.fire({
         title: "Login failed...",
         icon: "error",
         draggable: false,
@@ -157,6 +156,15 @@ function Login() {
             {serverError && (
               <p className="text-red-600 text-center text-sm">{serverError}</p>
             )}
+            <p className="text-sm text-center mt-2">
+              <NavLink
+                to="/forgot-password"
+                className="text-blue-600 hover:underline"
+              >
+                Forgot Password?
+              </NavLink>
+            </p>
+
             <button
               type="submit"
               disabled={loading}

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8000/api/auth", 
+  baseURL: "http://localhost:8000/api/auth",
 });
 
 // for registerUser.apply.call.
@@ -15,7 +15,6 @@ export const registerUser = async (userData) => {
   }
 };
 
-
 // for login...
 export const loginUser = async (credentials) => {
   try {
@@ -26,10 +25,9 @@ export const loginUser = async (credentials) => {
   }
 };
 
-
-// Helper → always attach token
+// Helper always attach token
 const getAuthHeaders = () => {
-  const token = localStorage.getItem("token"); // since you already save token
+  const token = localStorage.getItem("token");
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
@@ -42,13 +40,13 @@ export const uploadAvatar = async (formDataImg) => {
         ...getAuthHeaders(),
       },
     });
-    return res.data; // updated user
+    return res.data;
   } catch (err) {
     throw err.response?.data || { message: "Upload failed" };
   }
 };
 
-// Update profile info (name, email, etc.)
+// Update profile info name, email, etc.
 export const updateProfile = async (profileData) => {
   try {
     const res = await API.put("/me", profileData, {
@@ -72,7 +70,7 @@ export const changePassword = async (oldPassword, newPassword) => {
       { headers: getAuthHeaders() }
     );
 
-    // 🚨 Important: clear token, force re-login
+    // Importan to clear token force relogin...
     localStorage.removeItem("token");
 
     return res.data;
@@ -81,6 +79,25 @@ export const changePassword = async (oldPassword, newPassword) => {
   }
 };
 
+// Verify OTP
+export const verifyOtp = async (email, otp) => {
+  try {
+    const res = await API.post("/verify-otp", { email, otp });
+    return res.data;
+  } catch (err) {
+    throw err.response?.data || { message: "OTP verification failed" };
+  }
+};
+
+// for reset or forgot passwpord..
+
+export const forgotPassword = async (data) => {
+  return await API.post("/forgot-password", data);
+};
+
+// Reset password with OTP
+export const resetPassword = async (data) => {
+  return await API.post("/reset-password", data);
+};
 
 export default API;
-
