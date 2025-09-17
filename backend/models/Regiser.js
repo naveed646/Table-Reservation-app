@@ -36,6 +36,21 @@ const registerSchema = new mongoose.Schema(
     },
     passwordChangedAt: 
     { type: Date }, 
+
+    // reset password...
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    passwordResetToken: {
+      type: String,
+    },
+
+    passwordResetExpires: {
+      type: Date,
+    },
+
   },
   { timestamps: true }
 );
