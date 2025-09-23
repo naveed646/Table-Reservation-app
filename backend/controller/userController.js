@@ -30,7 +30,7 @@ const updateMe = async (req, res) => {
 
     // Issue new token
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
+      expiresIn: "1d",
     });
 
     res.json({

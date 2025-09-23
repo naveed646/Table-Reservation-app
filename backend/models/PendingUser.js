@@ -4,7 +4,7 @@ const pendingUserSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }, // already hashed
+    password: { type: String, required: true }, 
     otp: { type: String, required: true },
     otpExpires: { type: Date, required: true },
   },

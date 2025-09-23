@@ -32,7 +32,7 @@ const registerSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      default: "", // will store `/uploads/avatars/filename.png`
+      default: "", 
     },
     passwordChangedAt: 
     { type: Date }, 

@@ -42,6 +42,7 @@ function MenuItems() {
                   alt={item.title}
                   className="rounded-md mb-4 w-full h-48 object-cover"
                 />
+
                 <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
                 <p className="text-gray-500 text-sm">{item.description}</p>
                 <p className="text-gray-800 font-bold mt-2">Rs.{item.price}</p>

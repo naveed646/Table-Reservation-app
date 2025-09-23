@@ -17,7 +17,7 @@ function Signup() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    if (isSubmitting) return; // prevent double calls
+    if (isSubmitting) return; // dobara call krne se bachata he
     setIsSubmitting(true);
 
     try {
@@ -157,7 +157,7 @@ function Signup() {
               Already have an account?{" "}
               <NavLink
                 to="/login"
-                className="bg-black text-white p-1 hover:bg-zinc-600 cursor-pointer rounded-md"
+                className="text-blue-600 hover:text-blue-800"
               >
                 Login
               </NavLink>

@@ -39,11 +39,12 @@ function UserProfile({ profileRef }) {
             src={
               myUser?.profilePicture
                 ? `http://localhost:8000${myUser.profilePicture}`
-                : "chnage"
+                : "fallback-image.jpg"
             }
             alt="Profile"
             className="w-20 h-20 rounded-full object-cover border"
           />
+
           <label
             htmlFor="avatarUpload"
             className="absolute bottom-0 right-0 bg-gray-800 text-white p-1 rounded-full cursor-pointer"

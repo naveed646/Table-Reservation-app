@@ -4,7 +4,7 @@ const API = axios.create({
   baseURL: "http://localhost:8000/api/auth",
 });
 
-// for registerUser.apply.call.
+// for registerUser...
 
 export const registerUser = async (userData) => {
   try {
