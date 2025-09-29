@@ -1,7 +1,4 @@
 const Menu = require("../models/Menu");
-
-// GET all menu items
-// controllers/menuController.js
 exports.getMenu = async (req, res) => {
   try {
     const { page = 1, limit = 10, search = "" } = req.query;

@@ -11,7 +11,6 @@ import UserDashBoardLayout from "./components/userDashboardComp/userDashBoardLay
 import ReservationTable from "./components/userDashboardComp/ReservationTable";
 import Table from "./components/userDashboardComp/Table";
 import Offer from "./components/userDashboardComp/Offer";
-import Services from "./pages/Services";
 import ConatctUs from "./pages/ConatctUs";
 import AdminLayout from "./components/adminDashboard/AmdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -35,16 +34,18 @@ import { useEffect } from "react";
 import VerifyOtp from "./components/auth/VerifyOtp";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import ResetPassword from "./components/auth/ResetPassword";
-
+import AdminBlogManager from "./components/adminDashboard/AdminBlogManager";
+import Blogs from "./pages/Blogs";
+import BlogCard from "./components/blogComp/BlogCard";
+import BlogDetailPage from "./components/blogComp/BlogDetailPage";
 
 function App() {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getContactInfo());
   }, [dispatch]);
 
-  
   const router = createBrowserRouter([
     {
       path: "/register",
@@ -64,11 +65,11 @@ function App() {
     },
     {
       path: "/forgot-password",
-      element: <ForgotPassword/>,
+      element: <ForgotPassword />,
     },
     {
       path: "/reset-password",
-      element: <ResetPassword/>,
+      element: <ResetPassword />,
     },
 
     {
@@ -88,8 +89,8 @@ function App() {
         //   element: <ExploreMenu />,
         // },
         {
-          path: "/services",
-          element: <Services />,
+          path: "/blogs",
+          element: <Blogs />,
         },
         {
           path: "/contact",
@@ -101,7 +102,11 @@ function App() {
         },
         {
           path: "/menudetail/:id",
-          element: <MenuItemDetail/>,
+          element: <MenuItemDetail />,
+        },
+        {
+          path: "/blog/:id",
+          element: <BlogDetailPage />,
         },
         {
           path: "*",
@@ -111,53 +116,52 @@ function App() {
     },
 
     // User Layout with ProtectedRoute outside
-{
-  path: "/",
-  element: <ProtectedRoute role="user" />, 
-  children: [
     {
-      path: "",
-      element: <UserDashBoardLayout />,      
+      path: "/",
+      element: <ProtectedRoute role="user" />,
       children: [
-        { path: "dashboard", element: <UserDashboard /> },
-        { path: "reservation", element: <ReservationTable /> },
-        { path: "table", element: <Table /> },
-        { path: "offer", element: <Offer /> },
-        { path: "settings", element: <UserSettings /> },
+        {
+          path: "",
+          element: <UserDashBoardLayout />,
+          children: [
+            { path: "dashboard", element: <UserDashboard /> },
+            { path: "reservation", element: <ReservationTable /> },
+            { path: "table", element: <Table /> },
+            { path: "offer", element: <Offer /> },
+            { path: "settings", element: <UserSettings /> },
+          ],
+        },
       ],
     },
-  ],
-},
 
-// Admin Layout with ProtectedRoute outside
-{
-  path: "/",
-  element: <ProtectedRoute role="admin" />, 
-  children: [
+    // Admin Layout with ProtectedRoute outside
     {
-      path: "",
-      element: <AdminLayout />,          
+      path: "/",
+      element: <ProtectedRoute role="admin" />,
       children: [
-        { path: "adminDashboard", element: <AdminDashboard /> },
-        { path: "admindheader", element: <AdminHeader /> },
-        { path: "adminsidebar", element: <AdminSidebar /> },
-        { path: "adminreservation", element: <AdminReservationTable /> },
-        { path: "admintable", element: <AdminTableManagement /> },
-        { path: "adminsettings", element: <AdminSettings /> },
-        { path: "adminmenu", element: <AdminMenu /> },
-        { path: "/menulist", element: <MenuList /> }, 
-        { path: "/adminmessages", element: <Messages /> }, 
-        { path: "/contactinfo", element: <ContactInfo /> }, 
+        {
+          path: "",
+          element: <AdminLayout />,
+          children: [
+            { path: "adminDashboard", element: <AdminDashboard /> },
+            { path: "admindheader", element: <AdminHeader /> },
+            { path: "adminsidebar", element: <AdminSidebar /> },
+            { path: "adminreservation", element: <AdminReservationTable /> },
+            { path: "admintable", element: <AdminTableManagement /> },
+            { path: "adminsettings", element: <AdminSettings /> },
+            { path: "adminmenu", element: <AdminMenu /> },
+            { path: "/menulist", element: <MenuList /> },
+            { path: "/adminmessages", element: <Messages /> },
+            { path: "/contactinfo", element: <ContactInfo /> },
+            { path: "/adminBlogmanager", element: <AdminBlogManager /> },
+          ],
+        },
       ],
     },
-  ],
-},
 
+    // old one...
 
-
-// old one...
-
-      // for user..
+    // for user..
     // {
     //   path: "/",
     //   element: <UserDashBoardLayout />,

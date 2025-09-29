@@ -60,7 +60,7 @@ export const admin = {
 // ============================
 // admin dashbaorad links
 // ============================
-import { FaTachometerAlt, FaClipboardList, FaUtensils, FaEnvelope, FaPhone } from "react-icons/fa";
+import { FaTachometerAlt, FaClipboardList, FaUtensils, FaEnvelope, FaPhone,FaBlog } from "react-icons/fa";
 import { BiFoodMenu } from "react-icons/bi";
 import { GiMeal } from "react-icons/gi";
 export const adminlinks = [
@@ -71,6 +71,7 @@ export const adminlinks = [
     { to: "/menulist", label: "Menu Items", icon: GiMeal },
      { to: "/adminmessages", label: "Messages", icon: FaEnvelope },
      { to: "/contactinfo", label: "Manage Contact", icon: FaPhone },
+     { to: "/adminBlogmanager", label: "Manage Blogs", icon: FaBlog },
   ];
 
 
